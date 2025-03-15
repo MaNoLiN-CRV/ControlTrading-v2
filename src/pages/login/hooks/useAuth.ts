@@ -1,6 +1,9 @@
 import { useState } from "react";
 import ApiFactory from "@/fetcher/ApiFactory";
-
+/**
+ * This is a custom hook that handles authentication
+ * @returns  {Object} user, login, logout, isAuthenticated, loading, error
+ */
 const useAuth = () => {
   const [user, setUser] = useState<null | { id: number; name: string }>(null);
   const [loading, setLoading] = useState(false);

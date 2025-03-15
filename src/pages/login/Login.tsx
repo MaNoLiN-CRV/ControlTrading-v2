@@ -6,6 +6,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // Handle login
   const handleLogin = async () => {
     await login(username, password);
   };
