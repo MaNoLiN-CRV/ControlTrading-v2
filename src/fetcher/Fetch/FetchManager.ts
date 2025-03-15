@@ -1,5 +1,5 @@
-import Http from "./http";
-import { HttpResponse, HttpError } from "./http";
+import Http from "../http";
+import { HttpResponse, HttpError } from "../http";
 
 class FetchManager implements Http {
     private baseUrl: string;
