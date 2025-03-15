@@ -9,13 +9,11 @@ class FetchManager implements Http {
         this.baseUrl = baseUrl;
         this.headers = headers || {};
     }
-
-    async get<T = any>(url: string): Promise<HttpResponse<T>> {
-        const response = await fetch(`${this.baseUrl}${url}`, {
-            method: 'GET',
-            headers: this.headers,
-        });
-
+    /**
+     * @param response Response object from fetch
+     * @returns Promise<HttpResponse<T>>
+     */
+    private async handleResponse<T>(response: Response): Promise<HttpResponse<T>> {
         const text = await response.text();
         if (!response.ok) {
             const error: HttpError = {
@@ -24,13 +22,16 @@ class FetchManager implements Http {
             };
             throw error;
         }
+        const data = dataParser<T>(text);
+        return { status: response.status, data };
+    }
 
-        try {
-            const data = JSON.parse(text) as T;
-            return { status: response.status, data };
-        } catch {
-            return { status: response.status, data: text as unknown as T };
-        }
+    async get<T = any>(url: string): Promise<HttpResponse<T>> {
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: 'GET',
+            headers: this.headers,
+        });
+        return this.handleResponse<T>(response);
     }
 
     async post<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
@@ -42,22 +43,7 @@ class FetchManager implements Http {
             },
             body: JSON.stringify(data),
         });
-
-        const text = await response.text();
-        if (!response.ok) {
-            const error: HttpError = {
-                status: response.status,
-                message: `HTTP error! status: ${response.status}`,
-            };
-            throw error;
-        }
-
-        try {
-            const data = JSON.parse(text) as T;
-            return { status: response.status, data };
-        } catch {
-            return { status: response.status, data: text as unknown as T };
-        }
+        return this.handleResponse<T>(response);
     }
 
     async put<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
@@ -69,22 +55,7 @@ class FetchManager implements Http {
             },
             body: JSON.stringify(data),
         });
-
-        const text = await response.text();
-        if (!response.ok) {
-            const error: HttpError = {
-                status: response.status,
-                message: `HTTP error! status: ${response.status}`,
-            };
-            throw error;
-        }
-
-        try {
-            const data = JSON.parse(text) as T;
-            return { status: response.status, data };
-        } catch {
-            return { status: response.status, data: text as unknown as T };
-        }
+        return this.handleResponse<T>(response);
     }
 
     async delete<T = any>(url: string): Promise<HttpResponse<T>> {
@@ -92,23 +63,16 @@ class FetchManager implements Http {
             method: 'DELETE',
             headers: this.headers,
         });
-
-        const text = await response.text();
-        if (!response.ok) {
-            const error: HttpError = {
-                status: response.status,
-                message: `HTTP error! status: ${response.status}`,
-            };
-            throw error;
-        }
-
-        try {
-            const data = JSON.parse(text) as T;
-            return { status: response.status, data };
-        } catch {
-            return { status: response.status, data: text as unknown as T };
-        }
+        return this.handleResponse<T>(response);
     }
 }
+
+const dataParser = <T>(text: string): T => {
+    try {
+        return JSON.parse(text) as T;
+    } catch {
+        return text as unknown as T;
+    }
+};
 
 export default FetchManager;
