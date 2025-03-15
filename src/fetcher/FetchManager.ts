@@ -25,7 +25,11 @@ class FetchManager implements Http {
         const data = dataParser<T>(text);
         return { status: response.status, data };
     }
-
+    /**
+     * Fetch GET request
+     * @param url string
+     * @returns Promise<HttpResponse<T>>
+     */
     async get<T = any>(url: string): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'GET',
@@ -34,6 +38,12 @@ class FetchManager implements Http {
         return this.handleResponse<T>(response);
     }
 
+    /**
+     * Fetch POST request
+     * @param url string
+     * @param data any
+     * @returns Promise<HttpResponse<T>>
+     */
     async post<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'POST',
@@ -46,6 +56,12 @@ class FetchManager implements Http {
         return this.handleResponse<T>(response);
     }
 
+    /**
+     * Fetch PUT request
+     * @param url string
+     * @param data any
+     * @returns Promise<HttpResponse<T>>
+     */
     async put<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'PUT',
@@ -58,6 +74,11 @@ class FetchManager implements Http {
         return this.handleResponse<T>(response);
     }
 
+    /**
+     * Fetch DELETE request
+     * @param url string
+     * @returns Promise<HttpResponse<T>>
+     */
     async delete<T = any>(url: string): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'DELETE',
@@ -67,6 +88,11 @@ class FetchManager implements Http {
     }
 }
 
+/**
+ * Parse JSON string or return string
+ * @param text string
+ * @returns T
+ */
 const dataParser = <T>(text: string): T => {
     try {
         return JSON.parse(text) as T;
