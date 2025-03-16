@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
 
 const Login = () => {
-  const { login, loading, error } = useAuthContext();
+  const { login, loading, error, isAuthenticated } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
 
   // Handle login
   const handleLogin = async () => {
