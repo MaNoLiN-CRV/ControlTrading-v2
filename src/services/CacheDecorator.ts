@@ -2,14 +2,15 @@ import ApiService from "./ApiService";
 import Licence from "@/entities/Licence";
 import Client from "@/entities/Client";
 import Product from "@/entities/Product";
+import Cache from "./Cache";
 
 class CacheDecorator {
   private apiService: typeof ApiService;
-  private cache: Map<string, any>;
+  private cache: Cache<any>;
 
-  constructor(apiService: typeof ApiService) {
+  constructor(apiService: typeof ApiService, ttl: number) {
     this.apiService = apiService;
-    this.cache = new Map();
+    this.cache = new Cache(ttl);
   }
 
   async getLicenses(): Promise<Licence[]> {
@@ -41,8 +42,6 @@ class CacheDecorator {
     this.cache.set(cacheKey, data);
     return data;
   }
-
-  
 }
 
-export default new CacheDecorator(ApiService);
+export default new CacheDecorator(ApiService, 120000); // 2 minutes of cache
