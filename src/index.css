@@ -62,9 +62,12 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  justify-content: center;
+  align-items: center;
+  min-width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden; /* Evita el desbordamiento horizontal */
+  box-sizing: border-box; /* Asegura que el padding y el border no excedan el ancho */
 }
 
 h1 {
