@@ -8,3 +8,4 @@ const useEventCallback = (fn: Function) => {
 
   return useCallback((...args : any) => ref.current(...args), []);
 }
+export default useEventCallback;

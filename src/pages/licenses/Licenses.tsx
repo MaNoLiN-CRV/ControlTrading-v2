@@ -6,6 +6,7 @@ import Client from "@/entities/Client";
 import Product from "@/entities/Product";
 import Navbar from "@/components/Navbar";
 import ApiService from "@/services/CacheDecorator";
+import useEventCallback from "@/hooks/useEventCallback";
 
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
@@ -26,20 +27,24 @@ const Licenses = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const fetchLicenses = async () => {
+  const fetchLicenses = useEventCallback(async () => {
     const data = await ApiService.getLicenses();
     setLicenses(data);
-  };
+  });
 
-  const fetchClients = async () => {
+  const fetchClients = useEventCallback(async () => {
     const data = await ApiService.getClients();
     setClients(data);
-  };
+  });
 
-  const fetchProducts = async () => {
+  const fetchProducts = useEventCallback(async () => {
     const data = await ApiService.getProducts();
     setProducts(data);
-  };
+  });
+
+  const handleSearchChange = useEventCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  });
 
   const filteredLicenses = licenses.filter((license) =>
     clients.some(
@@ -59,7 +64,7 @@ const Licenses = () => {
             type="text"
             placeholder="Search"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange}
             className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
         </div>
