@@ -5,6 +5,7 @@ import Licence from "@/entities/Licence";
 import Client from "@/entities/Client";
 import Product from "@/entities/Product";
 import Navbar from "@/components/Navbar";
+import ApiService from "@/services/CacheDecorator";
 
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
@@ -26,21 +27,18 @@ const Licenses = () => {
   }, [isAuthenticated, navigate]);
 
   const fetchLicenses = async () => {
-    // Fetch licenses data from API
-    // Example: const response = await api.get<Licence[]>("/licenses");
-    // setLicenses(response.data);
+    const data = await ApiService.getLicenses();
+    setLicenses(data);
   };
 
   const fetchClients = async () => {
-    // Fetch clients data from API
-    // Example: const response = await api.get<Client[]>("/clients");
-    // setClients(response.data);
+    const data = await ApiService.getClients();
+    setClients(data);
   };
 
   const fetchProducts = async () => {
-    // Fetch products data from API
-    // Example: const response = await api.get<Product[]>("/products");
-    // setProducts(response.data);
+    const data = await ApiService.getProducts();
+    setProducts(data);
   };
 
   const filteredLicenses = licenses.filter((license) =>
