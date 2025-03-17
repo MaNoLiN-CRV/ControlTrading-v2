@@ -7,6 +7,7 @@ import Product from "@/entities/Product";
 import Navbar from "@/components/Navbar";
 import ApiService from "@/services/CacheDecorator";
 import useEventCallback from "@/hooks/useEventCallback";
+import useSafeDispatch from "@/hooks/useSafeDispatch";
 
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
@@ -15,6 +16,11 @@ const Licenses = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
+
+  const safeSetLicenses = useSafeDispatch(setLicenses);
+  const safeSetClients = useSafeDispatch(setClients);
+  const safeSetProducts = useSafeDispatch(setProducts);
+  const safeSetSearch = useSafeDispatch(setSearch);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -29,21 +35,21 @@ const Licenses = () => {
 
   const fetchLicenses = useEventCallback(async () => {
     const data = await ApiService.getLicenses();
-    setLicenses(data);
+    safeSetLicenses(data);
   });
 
   const fetchClients = useEventCallback(async () => {
     const data = await ApiService.getClients();
-    setClients(data);
+    safeSetClients(data);
   });
 
   const fetchProducts = useEventCallback(async () => {
     const data = await ApiService.getProducts();
-    setProducts(data);
+    safeSetProducts(data);
   });
 
   const handleSearchChange = useEventCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    safeSetSearch(e.target.value);
   });
 
   const filteredLicenses = licenses.filter((license) =>
