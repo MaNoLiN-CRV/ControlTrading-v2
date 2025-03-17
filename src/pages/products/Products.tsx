@@ -5,12 +5,16 @@ import Product from "@/entities/Product";
 import Navbar from "@/components/Navbar";
 import ApiService from "@/services/CacheDecorator";
 import useEventCallback from "@/hooks/useEventCallback";
+import useSafeDispatch from "@/hooks/useSafeDispatch";
 
 const Products = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
+
+  const safeSetProducts = useSafeDispatch(setProducts);
+  const safeSetSearch = useSafeDispatch(setSearch);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -22,15 +26,15 @@ const Products = () => {
 
   const fetchProducts = useEventCallback(async () => {
     const data = await ApiService.getProducts();
-    setProducts(data);
+    safeSetProducts(data);
   });
 
   const handleSearchChange = useEventCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    safeSetSearch(e.target.value);
   });
 
   const handleDaysDemoChange = useEventCallback((id: number, value: string) => {
-    setProducts((prevProducts) =>
+    safeSetProducts((prevProducts) =>
       prevProducts.map((product) =>
         product.idProduct === id ? { ...product, daysDemo: value } : product
         // TODO : Update the product in the backend
