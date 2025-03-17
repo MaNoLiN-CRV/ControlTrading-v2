@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
+import useSafeDispatch from "@/hooks/useSafeDispatch";
+import useEventCallback from "@/hooks/useEventCallback";
 
 const Login = () => {
   const { login, loading, error, isAuthenticated } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const safeSetUsername = useSafeDispatch(setUsername);
+  const safeSetPassword = useSafeDispatch(setPassword);
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -15,9 +19,9 @@ const Login = () => {
   }, [isAuthenticated, navigate]);
 
   // Handle login
-  const handleLogin = async () => {
+  const handleLogin = useEventCallback( async () => {
     await login(username, password);
-  };
+  });
 
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
@@ -28,14 +32,14 @@ const Login = () => {
             type="text"
             placeholder="Username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => safeSetUsername(e.target.value)}
             className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => safeSetPassword(e.target.value)}
             className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
           <button
