@@ -5,6 +5,7 @@ import Login from "@/pages/login/Login";
 import ProtectedRoute from "./components/wrappers/ProtectedRoute";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Licenses from "./pages/licenses/Licenses";
+import Products from "./pages/products/Products";
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Licenses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <Products />
             </ProtectedRoute>
           }
         />
