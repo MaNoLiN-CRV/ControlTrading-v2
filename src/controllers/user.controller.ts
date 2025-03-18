@@ -1,8 +1,14 @@
 import type { Request, Response } from 'express';
 
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
 
 const login = (req: Request, res: Response) => {
-  res.json({ message: 'User logged in' });
+  const { username, password }: LoginRequest = req.body;
+  
 }
 
 

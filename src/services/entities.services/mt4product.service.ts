@@ -1,10 +1,22 @@
-import type { Mt4Product } from '../entities/mt4product.entity';
+import type { Mt4Product } from '../../entities/mt4product.entity';
 import type { BaseService } from './base.service';
-import pool from '../config/database';
+import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class Mt4ProductService implements BaseService<Mt4Product> {
+  private static instance: Mt4ProductService;
   private table = 'mt4products';
+  
+  private constructor() {
+    // Private constructor to prevent instantiation
+  }
+  
+  public static getInstance(): Mt4ProductService {
+    if (!Mt4ProductService.instance) {
+      Mt4ProductService.instance = new Mt4ProductService();
+    }
+    return Mt4ProductService.instance;
+  }
   
   async findAll(): Promise<Mt4Product[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);

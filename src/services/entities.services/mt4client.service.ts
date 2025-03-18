@@ -1,12 +1,24 @@
-import { cache } from '../cache/cache';
-import type { Mt4Client } from '../entities/mt4client.entity';
+import { cache } from '../../cache/cache';
+import type { Mt4Client } from '../../entities/mt4client.entity';
 import type { BaseService } from './base.service';
-import pool from '../config/database';
+import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class Mt4ClientService implements BaseService<Mt4Client> {
+  private static instance: Mt4ClientService;
   private table = 'mt4clients';
   
+  private constructor() {
+    // Private constructor to prevent instantiation
+  }
+  
+  public static getInstance(): Mt4ClientService {
+    if (!Mt4ClientService.instance) {
+      Mt4ClientService.instance = new Mt4ClientService();
+    }
+    return Mt4ClientService.instance;
+  }
+
   async findAll(): Promise<Mt4Client[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);
     return rows as Mt4Client[];

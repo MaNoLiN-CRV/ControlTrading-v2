@@ -1,12 +1,24 @@
-import { cache } from '../cache/cache';
-import type { Mt4Licence } from '../entities/mt4licence.entity';
+import { cache } from '../../cache/cache';
+import type { Mt4Licence } from '../../entities/mt4licence.entity';
 import type { BaseService } from './base.service';
-import pool from '../config/database';
+import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class Mt4LicenceService implements BaseService<Mt4Licence> {
+  private static instance: Mt4LicenceService;
   private table = 'mt4licences';
   
+  private constructor() {
+    // Private constructor to prevent instantiation
+  }
+  
+  public static getInstance(): Mt4LicenceService {
+    if (!Mt4LicenceService.instance) {
+      Mt4LicenceService.instance = new Mt4LicenceService();
+    }
+    return Mt4LicenceService.instance;
+  }
+
   async findAll(): Promise<Mt4Licence[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);
     return rows as Mt4Licence[];

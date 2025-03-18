@@ -1,17 +1,31 @@
-import { cache } from '../cache/cache';
-import { Cacheable } from '../cache/cacheable';
-import pool from '../config/database';
-import type { Mt4Client } from '../entities/mt4client.entity';
-import type { Mt4Licence } from '../entities/mt4licence.entity';
-import type { Mt4Product } from '../entities/mt4product.entity';
+import { cache } from '../../cache/cache';
+import { Cacheable } from '../../cache/cacheable';
+import pool from '../../config/database';
+import type { Mt4Client } from '../../entities/mt4client.entity';
+import type { Mt4Licence } from '../../entities/mt4licence.entity';
+import type { Mt4Product } from '../../entities/mt4product.entity';
 import { Mt4ClientService } from './mt4client.service';
 import { Mt4LicenceService } from './mt4licence.service';
 import { Mt4ProductService } from './mt4product.service';
 
 export class TradingService {
-  private clientService = new Mt4ClientService();
-  private licenceService = new Mt4LicenceService();
-  private productService = new Mt4ProductService();
+  private static instance: TradingService;
+  private clientService: Mt4ClientService;
+  private licenceService: Mt4LicenceService;
+  private productService: Mt4ProductService;
+  
+  private constructor() {
+    this.clientService = Mt4ClientService.getInstance();
+    this.licenceService = Mt4LicenceService.getInstance();
+    this.productService = Mt4ProductService.getInstance();
+  }
+  
+  public static getInstance(): TradingService {
+    if (!TradingService.instance) {
+      TradingService.instance = new TradingService();
+    }
+    return TradingService.instance;
+  }
 
   /**
    * Get all active licences with client and product details
