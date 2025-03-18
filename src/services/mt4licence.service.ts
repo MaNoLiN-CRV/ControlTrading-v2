@@ -1,3 +1,4 @@
+import { cache } from '../cache/cache';
 import type { Mt4Licence } from '../entities/mt4licence.entity';
 import type { BaseService } from './base.service';
 import pool from '../config/database';
@@ -53,6 +54,9 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
       [licence.idClient, licence.idProduct, licence.expiration, licence.idShop]
     );
     
+    // Invalidate cache
+    this.invalidateCache(licence.idClient);
+    
     return {
       ...licence,
       idLicence: result.insertId
@@ -60,7 +64,10 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
   }
 
   async update(id: number, licence: Partial<Mt4Licence>): Promise<boolean> {
+    // Get the licence to know which client's cache to invalidate
+    const existingLicence = await this.findById(id);
     
+    // Build dynamic update query based on provided fields
     const entries = Object.entries(licence).filter(([key]) => key !== 'idLicence');
     
     if (entries.length === 0) {
@@ -75,15 +82,43 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
       [...values, id]
     );
     
+    // Invalidate cache
+    if (result.affectedRows > 0 && existingLicence) {
+      this.invalidateCache(existingLicence.idClient);
+    }
+    
     return result.affectedRows > 0;
   }
 
   async delete(id: number): Promise<boolean> {
+    // Get the licence to know which client's cache to invalidate
+    const licence = await this.findById(id);
+    
     const [result] = await pool.query<ResultSetHeader>(
       `DELETE FROM ${this.table} WHERE idLicence = ?`,
       [id]
     );
     
+    // Invalidate cache
+    if (result.affectedRows > 0 && licence) {
+      this.invalidateCache(licence.idClient);
+    }
+    
     return result.affectedRows > 0;
+  }
+
+  /**
+   * Invalidate relevant cache entries
+   */
+  private invalidateCache(clientId?: number): void {
+    cache.del('activeLicences');
+    
+    if (clientId) {
+      cache.del(`clientWithLicences:${JSON.stringify([clientId])}`);
+    } else {
+      // If no client ID is provided, clear all client-related cache entries
+      const keys = Object.keys(cache).filter(key => key.startsWith('clientWithLicences:'));
+      keys.forEach(key => cache.del(key));
+    }
   }
 }
