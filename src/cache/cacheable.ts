@@ -1,12 +1,16 @@
 import { cache } from './cache';
 
-export function Cacheable(cacheKey: string) {
+export function Cacheable(cacheKey: string): MethodDecorator {
   return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+    target: Object,
+    propertyKey: string | symbol,
+    descriptor: TypedPropertyDescriptor<any>
+  ): void {
     const originalMethod = descriptor.value;
+
+    if (typeof originalMethod !== 'function') {
+      throw new Error('@Cacheable can only be applied to methods');
+    }
 
     descriptor.value = async function (...args: any[]) {
       const key = `${cacheKey}:${JSON.stringify(args)}`;
@@ -22,7 +26,5 @@ export function Cacheable(cacheKey: string) {
       cache.set(key, result);
       return result;
     };
-
-    return descriptor;
   };
 }

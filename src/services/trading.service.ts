@@ -1,3 +1,4 @@
+import { Cacheable } from '../cache/cacheable';
 import pool from '../config/database';
 import type { Mt4Client } from '../entities/mt4client.entity';
 import type { Mt4Licence } from '../entities/mt4licence.entity';
@@ -14,6 +15,7 @@ export class TradingService {
   /**
    * Get all active licences with client and product details
    */
+  @Cacheable('activeLicences')
   async getActiveLicences(): Promise<any[]> {
     const today = new Date().toISOString().split('T')[0];
     
@@ -32,6 +34,7 @@ export class TradingService {
   /**
    * Get client with all active licences
    */
+  @Cacheable('clientWithLicences')
   async getClientWithLicences(clientId: number): Promise<any> {
     const client = await this.clientService.findById(clientId);
     
