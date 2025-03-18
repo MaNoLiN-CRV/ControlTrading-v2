@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { cache } from '../../cache/cache';
 import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import dotenv from 'dotenv';
