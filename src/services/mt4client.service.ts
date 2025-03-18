@@ -1,3 +1,4 @@
+import { cache } from '../cache/cache';
 import type { Mt4Client } from '../entities/mt4client.entity';
 import type { BaseService } from './base.service';
 import pool from '../config/database';
@@ -43,6 +44,9 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
       [client.MT4ID, client.Nombre, client.Broker, client.Tests, client.idShop]
     );
     
+    // Invalidate cache
+    this.invalidateCache();
+    
     return {
       ...client,
       idClient: result.insertId
@@ -65,6 +69,11 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
       [...values, id]
     );
     
+    // Invalidate cache
+    if (result.affectedRows > 0) {
+      this.invalidateCache();
+    }
+    
     return result.affectedRows > 0;
   }
 
@@ -74,6 +83,22 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
       [id]
     );
     
+    // Invalidate cache
+    if (result.affectedRows > 0) {
+      this.invalidateCache();
+    }
+    
     return result.affectedRows > 0;
+  }
+
+  /**
+   * Invalidate relevant cache entries
+   */
+  private invalidateCache(): void {
+    // Clear any cache entry that might contain client data
+    cache.del('activeLicences');
+    // Use regex pattern to clear all keys that match 'clientWithLicences:*'
+    const keys = Object.keys(cache).filter(key => key.startsWith('clientWithLicences:'));
+    keys.forEach(key => cache.del(key));
   }
 }
