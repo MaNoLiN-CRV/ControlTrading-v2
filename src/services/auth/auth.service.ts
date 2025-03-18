@@ -12,6 +12,13 @@ interface AuthUser {
   role: string;
 }
 
+interface LoginResponse {
+  success: boolean;
+  token?: string;
+  user?: AuthUser;
+  message?: string;
+}
+
 export class AuthService {
   private static instance: AuthService;
   
@@ -25,7 +32,7 @@ export class AuthService {
     return AuthService.instance;
   }
   
-  async login(username: string, password: string): Promise<{ success: boolean; token?: string; user?: AuthUser; message?: string }> {
+  async login(username: string, password: string): Promise<LoginResponse> {
     try {
         // Search for user in database
       const [rows] = await pool.query<RowDataPacket[]>(
