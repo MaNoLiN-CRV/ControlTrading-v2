@@ -1,3 +1,4 @@
+import { cache } from '../cache/cache';
 import { Cacheable } from '../cache/cacheable';
 import pool from '../config/database';
 import type { Mt4Client } from '../entities/mt4client.entity';
@@ -116,6 +117,9 @@ export class TradingService {
       
       await connection.commit();
       
+      // Invalidate relevant caches
+      this.invalidateRelatedCaches(clientId);
+      
       return {
         client: existingClient || { ...client, idClient: clientId },
         licence: { ...newLicence, product }
@@ -126,6 +130,23 @@ export class TradingService {
       throw error;
     } finally {
       connection.release();
+    }
+  }
+
+  /**
+   * Invalidate caches related to clients and licences
+   */
+  private invalidateRelatedCaches(clientId?: number): void {
+    // Invalidate all active licences cache
+    cache.del('activeLicences');
+    
+    if (clientId) {
+      // Invalidate client with licences cache
+      cache.del(`clientWithLicences:${JSON.stringify([clientId])}`);
+    } else {
+      // Invalidate all client with licences cache if no client ID is provided
+      const keys = Object.keys(cache).filter(key => key.startsWith('clientWithLicences:'));
+      keys.forEach(key => cache.del(key));
     }
   }
 }
