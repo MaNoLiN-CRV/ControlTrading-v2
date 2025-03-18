@@ -1,4 +1,11 @@
-interface Cliente {
+import type { Mt4Client } from './mt4client.entity';
+
+export * from './mt4client.entity';
+export * from './mt4licence.entity';
+export * from './mt4licence2.entity';
+export * from './mt4product.entity';
+
+export interface Cliente extends Mt4Client {
     idcliente: number;
     nombre: string;
     apellido1: string;
@@ -24,4 +31,3 @@ interface Cliente {
     expiracion: Date;
 }
 
-export type { Cliente };
