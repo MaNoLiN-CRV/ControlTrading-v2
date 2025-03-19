@@ -2,6 +2,7 @@ import type { Mt4Product } from '../../entities/mt4product.entity';
 import type { BaseService } from './base.service';
 import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { Cacheable } from '../../cache/cacheable';
 
 export class Mt4ProductService implements BaseService<Mt4Product> {
   private static instance: Mt4ProductService;
@@ -18,11 +19,13 @@ export class Mt4ProductService implements BaseService<Mt4Product> {
     return Mt4ProductService.instance;
   }
   
+  @Cacheable('products:all')
   async findAll(): Promise<Mt4Product[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);
     return rows as Mt4Product[];
   }
 
+  @Cacheable('product:byId')
   async findById(id: number): Promise<Mt4Product | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE idProduct = ?`,
@@ -36,6 +39,7 @@ export class Mt4ProductService implements BaseService<Mt4Product> {
     return rows[0] as Mt4Product;
   }
 
+  @Cacheable('product:byCode')
   async findByCode(code: string): Promise<Mt4Product | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE Code = ?`,
