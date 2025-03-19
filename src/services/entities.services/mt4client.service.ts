@@ -1,4 +1,5 @@
 import { cache } from '../../cache/cache';
+import { Cacheable } from '../../cache/cacheable';
 import type { Mt4Client } from '../../entities/mt4client.entity';
 import type { BaseService } from './base.service';
 import pool from '../../config/database';
@@ -19,11 +20,13 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
     return Mt4ClientService.instance;
   }
 
+  @Cacheable('clients:all')
   async findAll(): Promise<Mt4Client[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);
     return rows as Mt4Client[];
   }
 
+  @Cacheable('client:byId')
   async findById(id: number): Promise<Mt4Client | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE idClient = ?`,
@@ -37,6 +40,7 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
     return rows[0] as Mt4Client;
   }
 
+  @Cacheable('client:byMT4ID')
   async findByMT4ID(mt4id: string): Promise<Mt4Client | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE MT4ID = ?`,
