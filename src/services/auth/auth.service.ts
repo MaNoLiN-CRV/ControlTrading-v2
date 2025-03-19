@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import dotenv from 'dotenv';
+import { Cacheable } from '../../cache/cacheable';
 
 dotenv.config();
 
@@ -65,7 +66,7 @@ export class AuthService {
       
       const token = jwt.sign(
         authUser, 
-        process.env.JWT_SECRET || 'your_jwt_secret_key',
+        process.env.JWT_SECRET || 'default_secret',
         { expiresIn: '24h' }
       );
       
@@ -82,7 +83,8 @@ export class AuthService {
       };
     }
   }
-
+  
+  @Cacheable('auth:verifyToken')
   verifyToken(token: string): { valid: boolean; user?: any } {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
