@@ -16,7 +16,8 @@ export const getClientWithLicences = async (req: Request, res: Response) => {
   try {
     const clientWithLicences = await tradingService.getClientWithLicences(Number(req.params.clientId));
     if (!clientWithLicences) {
-      return res.status(404).json({ message: 'Client not found' });
+      res.status(404).json({ message: 'Client not found' });
+      return
     }
     res.status(200).json(clientWithLicences);
   } catch (error) {
