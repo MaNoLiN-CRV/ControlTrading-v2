@@ -6,7 +6,8 @@ const authentication = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Authentication token is missing or invalid' });
+    res.status(401).json({ message: 'Authentication token is missing or invalid' });
+    return;
   }
 
   const token = authHeader.split(' ')[1];
@@ -15,7 +16,8 @@ const authentication = (req: Request, res: Response, next: NextFunction) => {
     const { valid, user } = AuthService.getInstance().verifyToken(token || '');
 
     if (!valid || !user) {
-      return res.status(401).json({ message: 'Invalid authentication token' });
+      res.status(401).json({ message: 'Invalid authentication token' });
+      return;
     }
 
     req.user = user as AuthUser;
