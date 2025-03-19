@@ -1,4 +1,5 @@
 import { cache } from '../../cache/cache';
+import { Cacheable } from '../../cache/cacheable';
 import type { Mt4Licence } from '../../entities/mt4licence.entity';
 import type { BaseService } from './base.service';
 import pool from '../../config/database';
@@ -19,11 +20,13 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
     return Mt4LicenceService.instance;
   }
 
+  @Cacheable('licences:all')
   async findAll(): Promise<Mt4Licence[]> {
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM ${this.table}`);
     return rows as Mt4Licence[];
   }
 
+  @Cacheable('licence:byId')
   async findById(id: number): Promise<Mt4Licence | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE idLicence = ?`,
@@ -37,6 +40,7 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
     return rows[0] as Mt4Licence;
   }
 
+  @Cacheable('licences:byClientId')
   async findByClientId(clientId: number): Promise<Mt4Licence[]> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE idClient = ?`,
@@ -46,6 +50,7 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
     return rows as Mt4Licence[];
   }
 
+  @Cacheable('licence:byClientAndProduct')
   async findByClientAndProduct(clientId: number, productId: number): Promise<Mt4Licence | null> {
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT * FROM ${this.table} WHERE idClient = ? AND idProduct = ?`,
