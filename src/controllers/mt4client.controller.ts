@@ -16,7 +16,8 @@ export const getClientById = async (req: Request, res: Response) => {
   try {
     const client = await clientService.findById(Number(req.params.id));
     if (!client) {
-      return res.status(404).json({ message: 'Client not found' });
+      res.status(404).json({ message: 'Client not found' });
+      return; 
     }
     res.status(200).json(client);
   } catch (error) {
@@ -37,7 +38,8 @@ export const updateClient = async (req: Request, res: Response) => {
   try {
     const updated = await clientService.update(Number(req.params.id), req.body);
     if (!updated) {
-      return res.status(404).json({ message: 'Client not found' });
+      res.status(404).json({ message: 'Client not found' });
+      return;
     }
     res.status(200).json({ message: 'Client updated successfully' });
   } catch (error) {
@@ -49,7 +51,8 @@ export const deleteClient = async (req: Request, res: Response) => {
   try {
     const deleted = await clientService.delete(Number(req.params.id));
     if (!deleted) {
-      return res.status(404).json({ message: 'Client not found' });
+      res.status(404).json({ message: 'Client not found' });
+      return;
     }
     res.status(200).json({ message: 'Client deleted successfully' });
   } catch (error) {
