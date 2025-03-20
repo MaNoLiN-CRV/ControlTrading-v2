@@ -1,7 +1,5 @@
 import ApiService from "./ApiService";
-import Licence from "@/entities/Licence";
-import Client from "@/entities/Client";
-import Product from "@/entities/Product";
+import { Mt4Client, Mt4Licence, Mt4Product } from "@/entities/entities/client.entity";
 import Cache from "./Cache";
 
 class CacheDecorator {
@@ -13,7 +11,7 @@ class CacheDecorator {
     this.cache = new Cache(ttl);
   }
 
-  async getLicenses(): Promise<Licence[]> {
+  async getLicenses(): Promise<Mt4Licence[]> {
     const cacheKey = "licenses";
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey);
@@ -23,7 +21,7 @@ class CacheDecorator {
     return data;
   }
 
-  async getClients(): Promise<Client[]> {
+  async getClients(): Promise<Mt4Client[]> {
     const cacheKey = "clients";
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey);
@@ -33,7 +31,7 @@ class CacheDecorator {
     return data;
   }
 
-  async getProducts(): Promise<Product[]> {
+  async getProducts(): Promise<Mt4Product[]> {
     const cacheKey = "products";
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey);
@@ -44,4 +42,4 @@ class CacheDecorator {
   }
 }
 
-export default new CacheDecorator(ApiService, 120000); // 2 minutes of cache
+export default new CacheDecorator(ApiService, 120000);

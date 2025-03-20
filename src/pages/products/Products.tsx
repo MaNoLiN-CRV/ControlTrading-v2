@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Product from "@/entities/Product";
+import { Mt4Product } from "@/entities/entities/client.entity";
 import Navbar from "@/components/Navbar";
 import ApiService from "@/services/CacheDecorator";
 import useEventCallback from "@/hooks/useEventCallback";
@@ -10,7 +10,7 @@ import useSafeDispatch from "@/hooks/useSafeDispatch";
 const Products = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Mt4Product[]>([]);
   const [search, setSearch] = useState("");
 
   const safeSetProducts = useSafeDispatch(setProducts);
@@ -43,7 +43,7 @@ const Products = () => {
   });
 
   const filteredProducts = products.filter((product) =>
-    product.productName.toLowerCase().includes(search.toLowerCase())
+    product.Product.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -73,19 +73,19 @@ const Products = () => {
             <tbody>
               {filteredProducts.map((product) => (
                 <tr key={product.idProduct}>
-                  <td className="border px-4 py-2">{product.productName}</td>
+                  <td className="border px-4 py-2">{product.Product}</td>
                   <td className="border px-4 py-2">{product.version}</td>
                   <td className="border px-4 py-2">
                     <input
                       type="text"
-                      value={product.demoDays}
+                      value={product.DemoDays}
                       onChange={(e) => handleDaysDemoChange(product.idProduct, e.target.value)}
                       className="w-full px-2 py-1 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     />
                   </td>
                   <td className="border px-4 py-2">
                     <a
-                      href={product.downloadLink}
+                      href={product.link}
                       className="text-blue-500 hover:text-blue-700"
                       download
                     >

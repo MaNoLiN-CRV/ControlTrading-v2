@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Licence from "@/entities/Licence";
-import Client from "@/entities/Client";
-import Product from "@/entities/Product";
+import { Mt4Client, Mt4Licence, Mt4Product } from "@/entities/entities/client.entity";
 import Navbar from "@/components/Navbar";
 import ApiService from "@/services/CacheDecorator";
 import useEventCallback from "@/hooks/useEventCallback";
@@ -12,9 +10,9 @@ import useSafeDispatch from "@/hooks/useSafeDispatch";
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const [licenses, setLicenses] = useState<Licence[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [licenses, setLicenses] = useState<Mt4Licence[]>([]);
+  const [clients, setClients] = useState<Mt4Client[]>([]);
+  const [products, setProducts] = useState<Mt4Product[]>([]);
   const [search, setSearch] = useState("");
 
   const safeSetLicenses = useSafeDispatch(setLicenses);
@@ -56,7 +54,7 @@ const Licenses = () => {
     clients.some(
       (client) =>
         client.idClient === license.idLicence &&
-        client.name.toLowerCase().includes(search.toLowerCase())
+        client.Nombre.toLowerCase().includes(search.toLowerCase())
     )
   );
 
@@ -89,15 +87,15 @@ const Licenses = () => {
             <tbody>
               {filteredLicenses.map((license) => {
                 const client = clients.find((c) => c.idClient === license.idLicence);
-                const product = products.find((p) => p.idProduct === Number(license.product));
+                const product = products.find((p) => p.idProduct === license.idProduct);
                 return (
                   <tr key={license.idLicence}>
                     <td className="border px-4 py-2">{license.idLicence}</td>
-                    <td className="border px-4 py-2">{client?.mt4Id}</td>
-                    <td className="border px-4 py-2">{client?.name}</td>
-                    <td className="border px-4 py-2">{client?.broker}</td>
-                    <td className="border px-4 py-2">{product?.productName}</td>
-                    <td className="border px-4 py-2">{license.expiration}</td>
+                    <td className="border px-4 py-2">{client?.MT4ID}</td>
+                    <td className="border px-4 py-2">{client?.Nombre}</td>
+                    <td className="border px-4 py-2">{client?.Broker}</td>
+                    <td className="border px-4 py-2">{product?.Product}</td>
+                    <td className="border px-4 py-2">{license.expiration.toString()}</td>
                   </tr>
                 );
               })}
