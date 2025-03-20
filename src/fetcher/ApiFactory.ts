@@ -19,7 +19,12 @@ class ApiFactory {
      */
     static createApiFactory(type: FetchType, baseUrl: string, headers?: HeadersInit): Http {
         if (!ApiFactory.manager) {
-            ApiFactory.manager = ApiFactory.initializeManager(type, baseUrl, headers);
+            const token = localStorage.getItem('authToken');
+            const initialHeaders = {
+                ...headers,
+                'Authorization': token ? `Bearer ${token}` : '',
+            };
+            ApiFactory.manager = ApiFactory.initializeManager(type, baseUrl, initialHeaders);
         }
         return ApiFactory.manager;
     }

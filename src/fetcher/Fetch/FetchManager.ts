@@ -9,6 +9,28 @@ class FetchManager implements Http {
         this.baseUrl = baseUrl;
         this.headers = headers || {};
     }
+
+    // Añadir método para actualizar headers
+    public updateHeaders(headers: HeadersInit) {
+        this.headers = {
+            ...this.headers,
+            ...headers
+        };
+    }
+
+    /**
+     * Get headers with Authorization token
+     * @returns HeadersInit
+     */
+    private getHeadersWithAuth(): HeadersInit {
+        const token = localStorage.getItem('authToken');
+        return {
+            ...this.headers,
+            'Authorization': token ? `Bearer ${token}` : '',
+            'Content-Type': 'application/json',
+        };
+    }
+
     /**
      * @param response Response object from fetch
      * @returns Promise<HttpResponse<T>>
@@ -25,6 +47,7 @@ class FetchManager implements Http {
         const data = dataParser<T>(text);
         return { status: response.status, data };
     }
+
     /**
      * Fetch GET request
      * @param url string
@@ -33,7 +56,7 @@ class FetchManager implements Http {
     async get<T = any>(url: string): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'GET',
-            headers: this.headers,
+            headers: this.getHeadersWithAuth(),
         });
         return this.handleResponse<T>(response);
     }
@@ -47,10 +70,7 @@ class FetchManager implements Http {
     async post<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'POST',
-            headers: {
-                ...this.headers,
-                'Content-Type': 'application/json',
-            },
+            headers: this.getHeadersWithAuth(),
             body: JSON.stringify(data),
         });
         return this.handleResponse<T>(response);
@@ -65,10 +85,7 @@ class FetchManager implements Http {
     async put<T = any>(url: string, data: any): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'PUT',
-            headers: {
-                ...this.headers,
-                'Content-Type': 'application/json',
-            },
+            headers: this.getHeadersWithAuth(),
             body: JSON.stringify(data),
         });
         return this.handleResponse<T>(response);
@@ -82,7 +99,7 @@ class FetchManager implements Http {
     async delete<T = any>(url: string): Promise<HttpResponse<T>> {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'DELETE',
-            headers: this.headers,
+            headers: this.getHeadersWithAuth(),
         });
         return this.handleResponse<T>(response);
     }
