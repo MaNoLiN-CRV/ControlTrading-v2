@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "./context/AuthContext";
+import useAuth from "./hooks/useAuth";
 import useSafeDispatch from "@/hooks/useSafeDispatch";
-import useEventCallback from "@/hooks/useEventCallback";
 
 const Login = () => {
-  const { login, loading, error, isAuthenticated } = useAuthContext();
+  const { login, loading, error, isAuthenticated } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -14,14 +13,14 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate("/dashboard");
+      navigate("/products");
     }
   }, [isAuthenticated, navigate]);
 
   // Handle login
-  const handleLogin = useEventCallback( async () => {
+  const handleLogin = async () => {
     await login(username, password);
-  });
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">

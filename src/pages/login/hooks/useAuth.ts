@@ -1,40 +1,74 @@
 import { useState } from "react";
 import ApiFactory from "@/fetcher/ApiFactory";
+import useSafeDispatch from "@/hooks/useSafeDispatch";
+
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+interface AuthUser {
+  id: number;
+  name: string;
+}
+
+interface LoginResponse {
+  success: boolean;
+  token?: string;
+  user?: AuthUser;
+  message?: string;
+}
+
 /**
  * This is a custom hook that handles authentication
  * @returns  {Object} user, login, logout, isAuthenticated, loading, error
  */
 const useAuth = () => {
-  const [user, setUser] = useState<null | { id: number; name: string }>(null);
+  const [user, setUser] = useState<null | AuthUser>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const safeSetUser = useSafeDispatch(setUser);
+  const safeSetLoading = useSafeDispatch(setLoading);
+  const safeSetError = useSafeDispatch(setError);
 
   const login = async (username: string, password: string) => {
-    setLoading(true);
-    setError(null);
+    safeSetLoading(true);
+    safeSetError(null);
 
     try {
-      const api = ApiFactory.getFetchManager();
-      const response = await api.post<{ id: number; name: string }>("/auth/login", {
+      const api = ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
+      
+      console.log("Attempting login with:", { username });
+      
+      const response = await api.post<LoginResponse>("/login", {
         username,
         password,
-      });
+      } as LoginRequest);
+      
+      console.log("Login response:", response);
 
-      if (response.status === 200) {
-        setUser(response.data);
-        localStorage.setItem("authToken", JSON.stringify(response.data)); // JWT
+      if (response.data.success && response.data.token && response.data.user) {
+        safeSetUser(response.data.user);
+        localStorage.setItem("authToken", response.data.token);
       } else {
-        throw new Error("Invalid credentials");
+        throw new Error(response.data.message || "Invalid credentials");
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred");
+      console.error("Login error:", err);
+      
+      if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+        safeSetError("Network error: Cannot connect to server");
+      } else {
+        safeSetError(err.message || "An error occurred");
+      }
     } finally {
-      setLoading(false);
+      safeSetLoading(false);
     }
   };
 
   const logout = () => {
-    setUser(null);
+    safeSetUser(null);
     localStorage.removeItem("authToken");
   };
 

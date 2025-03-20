@@ -9,7 +9,7 @@ import Products from "./pages/products/Products";
 
 function App() {
   useEffect(() => {
-    ApiFactory.createApiFactory("Fetch", "https://ExpertLimsApi");
+    ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
     return () => {
       console.log("App unmounted");
     };

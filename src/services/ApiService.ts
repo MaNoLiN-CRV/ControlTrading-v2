@@ -4,8 +4,7 @@ import Client from "@/entities/Client";
 import Product from "@/entities/Product";
 
 class ApiService {
-  private api = ApiFactory.createApiFactory("Fetch", "https://ExpertLimsApi");
-
+  private api = ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
   async getLicenses(): Promise<Licence[]> {
     const response = await this.api.get<Licence[]>("/licenses");
     return response.data;
