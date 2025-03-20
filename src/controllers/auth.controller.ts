@@ -9,6 +9,7 @@ interface LoginRequest {
 const authService = AuthService.getInstance();
 
 const login = (req: Request, res: Response) => {
+  console.log('Login request : ', req.body);
   const { username, password }: LoginRequest = req.body;
   authService.login(username, password)
     .then((response) => {

@@ -5,11 +5,14 @@ import tradingRoutes from './routes/trading.routes';
 import cacheRoutes from './routes/cache.routes';
 import authentication from './middleware/authentication';
 import authorization from './middleware/authorization';
+import cors from 'cors';
 
 const app = express();
 
 // Middlewares
 app.use(express.json());
+// Enable CORS
+app.use(cors());
 
 // Routes
 app.use('/api/', authRoutes);

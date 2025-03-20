@@ -36,7 +36,7 @@ export class AuthService {
     try {
         // Search for user in database
       const [rows] = await pool.query<RowDataPacket[]>(
-        `SELECT * FROM users WHERE username = ? LIMIT 1`,
+        `SELECT * FROM clientes WHERE user = ? LIMIT 1`,
         [username]
       );
       
@@ -50,7 +50,7 @@ export class AuthService {
       const user = rows[0];
       
       // TODO - Hash password and compare
-      if (user?.password !== password) {
+      if (user?.pass !== password) {
         return { 
           success: false, 
           message: 'Invalid username or password' 
@@ -60,7 +60,7 @@ export class AuthService {
       // Create JWT token
       const authUser: AuthUser = {
         id: user.id,
-        username: user.username,
+        username: user.user,
         role: user.role
       };
       
