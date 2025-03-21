@@ -5,7 +5,7 @@ class ApiService {
   private api = ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
 
   async getLicenses(): Promise<Mt4Licence[]> {
-    const response = await this.api.get<Mt4Licence[]>("/licenses");
+    const response = await this.api.get<Mt4Licence[]>("/licences");
     return response.data;
   }
 
