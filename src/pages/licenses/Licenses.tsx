@@ -1,107 +1,115 @@
-import { useState, useEffect } from "react";
+import { Suspense } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Mt4Client, Mt4Licence, Mt4Product } from "@/entities/entities/client.entity";
 import Navbar from "@/components/Navbar";
-import ApiService from "@/services/CacheDecorator";
-import useEventCallback from "@/hooks/useEventCallback";
-import useSafeDispatch from "@/hooks/useSafeDispatch";
+import { FixedSizeList as VirtualizedList } from "react-window";
+import useLicensesData from "./hooks/useLicensesData";
+import useSearchAndPagination from "./hooks/useSearchAndPagination";
 
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const [licenses, setLicenses] = useState<Mt4Licence[]>([]);
-  const [clients, setClients] = useState<Mt4Client[]>([]);
-  const [products, setProducts] = useState<Mt4Product[]>([]);
-  const [search, setSearch] = useState("");
+  const { licenses, clients, products, isAllLoaded } = useLicensesData();
+  const {
+    search,
+    currentPage,
+    totalPages,
+    paginatedItems: paginatedLicenses,
+    handleSearchChange,
+    setCurrentPage,
+  } = useSearchAndPagination(licenses, 20);
 
-  const safeSetLicenses = useSafeDispatch(setLicenses);
-  const safeSetClients = useSafeDispatch(setClients);
-  const safeSetProducts = useSafeDispatch(setProducts);
-  const safeSetSearch = useSafeDispatch(setSearch);
+  if (!isAuthenticated()) {
+    navigate("/login");
+    return null;
+  }
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/login");
-    } else {
-      // Fetch licenses, clients, and products data
-      fetchLicenses();
-      fetchClients();
-      fetchProducts();
-    }
-  }, [isAuthenticated, navigate]);
-
-  const fetchLicenses = useEventCallback(async () => {
-    const data = await ApiService.getLicenses();
-    safeSetLicenses(data);
+  const tableData = paginatedLicenses.map((license) => {
+    const client = clients.find((c) => c.idClient === license.idClient);
+    const product = products.find((p) => p.idProduct === license.idProduct);
+    return {
+      id: license.idLicence,
+      columns: [
+        { value: license.idLicence },
+        { value: client?.MT4ID || "-" },
+        { value: client?.Nombre || "-" },
+        { value: client?.Broker || "-" },
+        { value: product?.Product || "-" },
+        { value: license.expiration.toString() },
+      ],
+    };
   });
-
-  const fetchClients = useEventCallback(async () => {
-    const data = await ApiService.getClients();
-    safeSetClients(data);
-  });
-
-  const fetchProducts = useEventCallback(async () => {
-    const data = await ApiService.getProducts();
-    safeSetProducts(data);
-  });
-
-  const handleSearchChange = useEventCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    safeSetSearch(e.target.value);
-  });
-
-  const filteredLicenses = licenses.filter((license) =>
-    clients.some(
-      (client) =>
-        client.idClient === license.idLicence &&
-        client.Nombre.toLowerCase().includes(search.toLowerCase())
-    )
-  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <Navbar />
-      <main className="container mx-auto p-4">
+      <main className="w-full p-4">
         <h1 className="text-4xl font-bold text-center mb-6">Licencias</h1>
-        <div className="mb-4">
+
+        <div className="mb-4 px-4 max-w-5xl mx-auto">
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search by client name"
             value={search}
             onChange={handleSearchChange}
             className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            disabled={!isAllLoaded}
           />
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-gray-800 rounded-lg">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Licence</th>
-                <th className="px-4 py-2">MT4</th>
-                <th className="px-4 py-2">Cliente</th>
-                <th className="px-4 py-2">Broker</th>
-                <th className="px-4 py-2">Producto</th>
-                <th className="px-4 py-2">Expiración</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredLicenses.map((license) => {
-                const client = clients.find((c) => c.idClient === license.idLicence);
-                const product = products.find((p) => p.idProduct === license.idProduct);
-                return (
-                  <tr key={license.idLicence}>
-                    <td className="border px-4 py-2">{license.idLicence}</td>
-                    <td className="border px-4 py-2">{client?.MT4ID}</td>
-                    <td className="border px-4 py-2">{client?.Nombre}</td>
-                    <td className="border px-4 py-2">{client?.Broker}</td>
-                    <td className="border px-4 py-2">{product?.Product}</td>
-                    <td className="border px-4 py-2">{license.expiration.toString()}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+
+        {!isAllLoaded ? (
+          <div className="flex flex-col items-center justify-center space-y-4 my-8">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-white text-xl">Cargando datos...</div>
+          </div>
+        ) : tableData.length === 0 ? (
+          <div className="text-center text-gray-400 my-8">
+            No se encontraron licencias que coincidan con tu búsqueda
+          </div>
+        ) : (
+          <Suspense fallback={<div className="text-center my-4">Cargando tabla...</div>}>
+            <div className="overflow-x-auto px-4">
+              <VirtualizedList
+                height={400}
+                itemCount={tableData.length}
+                itemSize={50}
+                width="100%"
+              >
+                {({ index, style }) => {
+                  const row = tableData[index];
+                  return (
+                    <div style={style} className="flex border-b border-gray-700">
+                      {row.columns.map((col, colIndex) => (
+                        <div key={colIndex} className="flex-1 px-4 py-2">
+                          {col.value}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }}
+              </VirtualizedList>
+            </div>
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span className="text-white">
+                Página {currentPage} de {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
+          </Suspense>
+        )}
       </main>
     </div>
   );
