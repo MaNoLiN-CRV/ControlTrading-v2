@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ApiFactory from "@/fetcher/ApiFactory";
 import useSafeDispatch from "@/hooks/useSafeDispatch";
 
@@ -32,6 +32,8 @@ const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
+  // Ref to track if token has been verified in this session
+  const hasVerifiedToken = useRef(false);
   
   const safeSetUser = useSafeDispatch(setUser);
   const safeSetLoading = useSafeDispatch(setLoading);
@@ -39,11 +41,16 @@ const useAuth = () => {
   const safeSetIsTokenValid = useSafeDispatch(setIsTokenValid);
 
   // Verify token function - only call this explicitly when needed
-  const verifyToken = async () => {
+  const verifyToken = async (force = false) => {
+    if (hasVerifiedToken.current && !force) {
+      return isTokenValid;
+    }
+    
     const token = localStorage.getItem("authToken");
     
     if (!token) {
       safeSetIsTokenValid(false);
+      hasVerifiedToken.current = true;
       return false;
     }
 
@@ -54,6 +61,7 @@ const useAuth = () => {
       const isValid = response.data.isValid;
       
       safeSetIsTokenValid(isValid);
+      hasVerifiedToken.current = true;
       
       if (!isValid) {
         localStorage.removeItem("authToken");
@@ -66,6 +74,7 @@ const useAuth = () => {
       safeSetIsTokenValid(false);
       localStorage.removeItem("authToken");
       safeSetUser(null);
+      hasVerifiedToken.current = true;
       return false;
     } finally {
       safeSetLoading(false);
