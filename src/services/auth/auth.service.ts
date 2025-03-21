@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import dotenv from 'dotenv';
-import { Cacheable } from '../../cache/cacheable';
 
 dotenv.config();
 
