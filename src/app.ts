@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use('/api/', authRoutes);
+app.use('/api', authRoutes);
 app.use('/api/clients', authentication, mt4ClientRoutes);
 app.use('/api/trading', authentication , tradingRoutes);
 app.use('/api/products', authentication, mt4productRoutes);

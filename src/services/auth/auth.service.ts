@@ -67,7 +67,7 @@ export class AuthService {
       const token = jwt.sign(
         authUser, 
         process.env.JWT_SECRET || 'default_secret',
-        { expiresIn: '24h' }
+        { expiresIn: '5h' }
       );
       
       return {
@@ -84,7 +84,6 @@ export class AuthService {
     }
   }
   
-  @Cacheable('auth:verifyToken')
   verifyToken(token: string): { valid: boolean; user?: any } {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
@@ -93,6 +92,7 @@ export class AuthService {
         user: decoded
       };
     } catch (error) {
+      console.error('Token verification error:', error);
       return {
         valid: false
       };
