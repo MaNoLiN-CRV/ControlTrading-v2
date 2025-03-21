@@ -1,11 +1,19 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 
 const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
 
-// AuthProvider is a wrapper component that provides the authentication context to its children
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = useAuth();
+  
+  useEffect(() => {
+    const checkInitialToken = async () => {
+      await auth.verifyToken();
+    };
+    
+    checkInitialToken();
+  }, []);
+
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 

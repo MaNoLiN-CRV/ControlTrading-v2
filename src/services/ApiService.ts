@@ -15,7 +15,7 @@ class ApiService {
   }
 
   async getProducts(): Promise<Mt4Product[]> {
-    const response = await this.api.get<Mt4Product[]>("/products/");
+    const response = await this.api.get<Mt4Product[]>("/products");
     return response.data;
   }
 }
