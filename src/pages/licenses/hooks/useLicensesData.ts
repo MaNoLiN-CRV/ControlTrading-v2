@@ -14,61 +14,63 @@ const useLicensesData = () => {
     products: true,
   });
 
-  const dataFetchedRef = useRef({
-    licenses: false,
-    clients: false,
-    products: false,
-  });
-
   const safeSetLicenses = useSafeDispatch(setLicenses);
   const safeSetClients = useSafeDispatch(setClients);
   const safeSetProducts = useSafeDispatch(setProducts);
   const safeSetIsLoading = useSafeDispatch(setIsLoading);
 
-  const fetchLicenses = useEventCallback(async () => {
-    if (dataFetchedRef.current.licenses && licenses.length > 0) return;
+  const fetchLicenses = useEventCallback(async (forceUpdate = false) => {
     try {
+      safeSetIsLoading(prev => ({ ...prev, licenses: true }));
+      // Invalidar caché si es una actualización forzada
+      if (forceUpdate) {
+        ApiService.invalidateCache("licenses");
+      }
       const data = await ApiService.getLicenses();
       safeSetLicenses(data);
-      dataFetchedRef.current.licenses = true;
     } catch (error) {
       console.error("Error fetching licenses:", error);
     } finally {
-      safeSetIsLoading((prev) => ({ ...prev, licenses: false }));
+      safeSetIsLoading(prev => ({ ...prev, licenses: false }));
     }
   });
 
-  const fetchClients = useEventCallback(async () => {
-    if (dataFetchedRef.current.clients && clients.length > 0) return;
+  const fetchClients = useEventCallback(async (forceUpdate = false) => {
     try {
+      safeSetIsLoading(prev => ({ ...prev, clients: true }));
+      if (forceUpdate) {
+        ApiService.invalidateCache("clients");
+      }
       const data = await ApiService.getClients();
       safeSetClients(data);
-      dataFetchedRef.current.clients = true;
     } catch (error) {
       console.error("Error fetching clients:", error);
     } finally {
-      safeSetIsLoading((prev) => ({ ...prev, clients: false }));
+      safeSetIsLoading(prev => ({ ...prev, clients: false }));
     }
   });
 
-  const fetchProducts = useEventCallback(async () => {
-    if (dataFetchedRef.current.products && products.length > 0) return;
+  const fetchProducts = useEventCallback(async (forceUpdate = false) => {
     try {
+      safeSetIsLoading(prev => ({ ...prev, products: true }));
+      if (forceUpdate) {
+        ApiService.invalidateCache("products");
+      }
       const data = await ApiService.getProducts();
       safeSetProducts(data);
-      dataFetchedRef.current.products = true;
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
-      safeSetIsLoading((prev) => ({ ...prev, products: false }));
+      safeSetIsLoading(prev => ({ ...prev, products: false }));
     }
   });
 
+  // Carga inicial de datos
   useEffect(() => {
-    if (!dataFetchedRef.current.licenses) fetchLicenses();
-    if (!dataFetchedRef.current.clients) fetchClients();
-    if (!dataFetchedRef.current.products) fetchProducts();
-  }, [fetchLicenses, fetchClients, fetchProducts]);
+    fetchLicenses(false);
+    fetchClients(false);
+    fetchProducts(false);
+  }, []);
 
   const isAllLoaded = useMemo(
     () => !isLoading.licenses && !isLoading.clients && !isLoading.products,

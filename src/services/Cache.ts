@@ -26,6 +26,9 @@ class Cache<T> {
     }
     return cached.data;
   }
+  delete(key: string) {
+    this.cache.delete(key);
+  }
 
   has(key: string): boolean {
     return this.get(key) !== null;

@@ -6,12 +6,17 @@ import { FixedSizeList as VirtualizedList } from "react-window";
 import useLicensesData from "./hooks/useLicensesData";
 import useSearchAndPagination from "./hooks/useSearchAndPagination";
 import { LicenseFilterCombobox } from "./components/ComboBox";
+import { EditLicenseDialog } from "./components/EditLicenseDialog";
+import { Mt4Licence } from "@/entities/entities/client.entity";
+import { Edit } from "lucide-react";
 
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const { licenses, clients, products, isLoading, isAllLoaded } = useLicensesData();
+  const { licenses, clients, products, isLoading, isAllLoaded, fetchLicenses, fetchClients, fetchProducts } = useLicensesData();
   const [filterType, setFilterType] = useState("");
+  const [selectedLicense, setSelectedLicense] = useState<Mt4Licence | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // Function to sort licenses by idLicence in descending order
   const sortLicensesById = (a: any, b: any) => b.idLicence - a.idLicence;
@@ -68,10 +73,27 @@ const Licenses = () => {
     return null;
   }
 
+  const handleEditLicense = (license: Mt4Licence) => {
+    setSelectedLicense(license);
+    setIsEditDialogOpen(true);
+  };
+
+  const closeEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setSelectedLicense(null);
+  };
+
+  const handleLicenseUpdated = async () => {
+    await fetchLicenses(true);
+    await fetchClients(true);
+    await fetchProducts(true);
+  };
+
   const tableData = paginatedLicenses.map((license) => {
     const client = clients.find((c) => c.idClient === license.idClient);
     const product = products.find((p) => p.idProduct === license.idProduct);
     return {
+      license,
       id: license.idLicence,
       columns: [
         { value: license.idLicence },
@@ -79,7 +101,7 @@ const Licenses = () => {
         { value: client?.Nombre || "-" },
         { value: client?.Broker || "-" },
         { value: product?.Product || "-" },
-        { value: license.expiration.toString().split("T")[0] },
+        { value: license.expiration ? new Date(license.expiration).toLocaleDateString() : "-" },
       ],
     };
   });
@@ -133,25 +155,39 @@ const Licenses = () => {
         ) : (
           <Suspense fallback={<div className="text-center my-4">Cargando tabla...</div>}>
             <div className="overflow-x-auto px-4">
-              <VirtualizedList
-                height={400}
-                itemCount={tableData.length}
-                itemSize={50}
-                width="100%"
-              >
-                {({ index, style }) => {
-                  const row = tableData[index];
-                  return (
-                    <div style={style} className="flex border-b border-gray-700">
+              <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+                <thead className="bg-gray-700">
+                  <tr>
+                    <th className="px-4 py-2 text-left">ID</th>
+                    <th className="px-4 py-2 text-left">MT4 ID</th>
+                    <th className="px-4 py-2 text-left">Cliente</th>
+                    <th className="px-4 py-2 text-left">Broker</th>
+                    <th className="px-4 py-2 text-left">Producto</th>
+                    <th className="px-4 py-2 text-left">Expiración</th>
+                    <th className="px-4 py-2 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.map((row) => (
+                    <tr key={row.id} className="border-b border-gray-700 hover:bg-gray-700/50">
                       {row.columns.map((col, colIndex) => (
-                        <div key={colIndex} className="flex-1 px-4 py-2">
+                        <td key={colIndex} className="px-4 py-2">
                           {col.value}
-                        </div>
+                        </td>
                       ))}
-                    </div>
-                  );
-                }}
-              </VirtualizedList>
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          onClick={() => handleEditLicense(row.license)}
+                          className="p-1 text-blue-400 hover:text-blue-300 rounded focus:outline-none"
+                          title="Editar licencia"
+                        >
+                          <Edit size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
             <div className="flex justify-between items-center mt-4">
               <button
@@ -175,6 +211,16 @@ const Licenses = () => {
           </Suspense>
         )}
       </main>
+
+      {/* Diálogo de edición */}
+      <EditLicenseDialog
+        isOpen={isEditDialogOpen}
+        onClose={closeEditDialog}
+        license={selectedLicense}
+        clients={clients}
+        products={products}
+        onLicenseUpdated={handleLicenseUpdated}
+      />
     </div>
   );
 };
