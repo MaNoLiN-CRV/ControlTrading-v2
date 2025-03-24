@@ -1,7 +1,11 @@
 import { useState, useMemo } from "react";
 import useEventCallback from "@/hooks/useEventCallback";
 
-const useSearchAndPagination = (items: any[], itemsPerPage: number) => {
+const useSearchAndPagination = (
+  items: any[],
+  itemsPerPage: number,
+  sortFn?: (a: any, b: any) => number
+) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -11,12 +15,16 @@ const useSearchAndPagination = (items: any[], itemsPerPage: number) => {
   });
 
   const filteredItems = useMemo(() => {
-    return items.filter((item) =>
+    let filtered = items.filter((item) =>
       Object.values(item).some((value) =>
         String(value).toLowerCase().includes(search.toLowerCase())
       )
     );
-  }, [items, search]);
+    if (sortFn) {
+      filtered = [...filtered].sort(sortFn); // Apply sort function if provided
+    }
+    return filtered;
+  }, [items, search, sortFn]);
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;

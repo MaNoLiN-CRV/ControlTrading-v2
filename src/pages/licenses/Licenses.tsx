@@ -9,7 +9,11 @@ import useSearchAndPagination from "./hooks/useSearchAndPagination";
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const { licenses, clients, products, isAllLoaded } = useLicensesData();
+  const { licenses, clients, products, isLoading, isAllLoaded } = useLicensesData();
+
+  // Function to sort licenses by idLicence in descending order
+  const sortLicensesById = (a: any, b: any) => b.idLicence - a.idLicence;
+
   const {
     search,
     currentPage,
@@ -17,7 +21,7 @@ const Licenses = () => {
     paginatedItems: paginatedLicenses,
     handleSearchChange,
     setCurrentPage,
-  } = useSearchAndPagination(licenses, 20);
+  } = useSearchAndPagination(licenses, 20, sortLicensesById);
 
   if (!isAuthenticated()) {
     navigate("/login");
