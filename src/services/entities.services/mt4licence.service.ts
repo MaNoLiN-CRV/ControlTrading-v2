@@ -81,30 +81,43 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
   }
 
   async update(id: number, licence: Partial<Mt4Licence>): Promise<boolean> {
-    // Get the licence to know which client's cache to invalidate
-    const existingLicence = await this.findById(id);
+    console.log('Updating licence:', id, licence);
     
-    // Build dynamic update query based on provided fields
+    // Handle date formatting for both Date objects and ISO strings
+    if (licence.expiration) {
+      console.log('Converting date to MySQL format');
+      const date = licence.expiration instanceof Date 
+        ? licence.expiration 
+        : new Date(licence.expiration);
+      
+      // Format date as YYYY-MM-DD
+      licence.expiration = date.toISOString().split('T')[0];
+    }
+  
     const entries = Object.entries(licence).filter(([key]) => key !== 'idLicence');
-    
     if (entries.length === 0) {
       return false;
     }
-    
+  
     const setClause = entries.map(([key]) => `${key} = ?`).join(', ');
     const values = entries.map(([, value]) => value);
-    
-    const [result] = await pool.query<ResultSetHeader>(
-      `UPDATE ${this.table} SET ${setClause} WHERE idLicence = ?`,
-      [...values, id]
-    );
-    
-    // Invalidate cache
-    if (result.affectedRows > 0 && existingLicence) {
-      this.invalidateCache(existingLicence.idClient);
+  
+    try {
+      const [result] = await pool.query<ResultSetHeader>(
+        `UPDATE ${this.table} SET ${setClause} WHERE idLicence = ?`,
+        [...values, id]
+      );
+  
+      // Invalidate cache if update was successful
+      if (result.affectedRows > 0 && licence.idClient) {
+        this.invalidateCache(licence.idClient);
+      }
+  
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error('Error updating licence:', error);
+      throw error;
     }
-    
-    return result.affectedRows > 0;
   }
 
   async delete(id: number): Promise<boolean> {
@@ -129,7 +142,7 @@ export class Mt4LicenceService implements BaseService<Mt4Licence> {
    */
   private invalidateCache(clientId?: number): void {
     cache.del('activeLicences');
-    
+    cache.del('licences:all');
     if (clientId) {
       cache.del(`clientWithLicences:${JSON.stringify([clientId])}`);
     } else {

@@ -31,7 +31,6 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
     console.log('➡️ Proceeding to next middleware/controller');
     next();
   } catch (error) {
-    console.error('❌ Authentication error:', error);
     res.status(401).json({ message: 'Authentication failed' });
   }
 };

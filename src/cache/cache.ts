@@ -5,7 +5,10 @@ class Cache {
   private cache: NodeCache;
 
   constructor(ttlSeconds: number) {
-    this.cache = new NodeCache({ stdTTL: ttlSeconds, checkperiod: ttlSeconds * 0.2 });
+    this.cache = new NodeCache({ 
+      stdTTL: ttlSeconds, 
+      checkperiod: ttlSeconds * 0.2 
+    });
   }
 
   get<T>(key: string): T | undefined {
@@ -22,6 +25,19 @@ class Cache {
 
   flush(): void {
     this.cache.flushAll();
+  }
+
+  getKeys(): string[] {
+    return this.cache.keys();
+  }
+
+  delStartWith(startStr: string): void {
+    const keys = this.getKeys();
+    keys.forEach(key => {
+      if (key.startsWith(startStr)) {
+        this.del(key);
+      }
+    });
   }
 }
 

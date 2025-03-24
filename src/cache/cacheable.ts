@@ -13,7 +13,8 @@ export function Cacheable(cacheKey: string): MethodDecorator {
     }
 
     descriptor.value = async function (...args: any[]) {
-      const key = `${cacheKey}:${JSON.stringify(args)}`;
+      
+      const key = args.length > 0 ? `${cacheKey}:${JSON.stringify(args)}` : cacheKey;
       const cachedResult = cache.get(key);
 
       if (cachedResult) {

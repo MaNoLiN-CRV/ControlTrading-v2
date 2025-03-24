@@ -112,7 +112,10 @@ export class Mt4ClientService implements BaseService<Mt4Client> {
    */
   private invalidateCache(): void {
     // Clear any cache entry that might contain client data
+    console.log('Invalidating cache for clients **************');
     cache.del('activeLicences');
+    cache.del('licences:all');
+    cache.del('clients:all');
     // Use regex pattern to clear all keys that match 'clientWithLicences:*'
     const keys = Object.keys(cache).filter(key => key.startsWith('clientWithLicences:'));
     keys.forEach(key => cache.del(key));

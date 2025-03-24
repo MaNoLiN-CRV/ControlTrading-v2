@@ -3,6 +3,7 @@ import type { BaseService } from './base.service';
 import pool from '../../config/database';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { Cacheable } from '../../cache/cacheable';
+import { cache } from '../../cache/cache';
 
 export class Mt4ProductService implements BaseService<Mt4Product> {
   private static instance: Mt4ProductService;
@@ -83,6 +84,10 @@ export class Mt4ProductService implements BaseService<Mt4Product> {
       [...values, id]
     );
     
+    if (result.affectedRows > 0) {
+      this.invalidateCache(id);
+      this.invalidateCache
+    }
     return result.affectedRows > 0;
   }
 
@@ -91,7 +96,20 @@ export class Mt4ProductService implements BaseService<Mt4Product> {
       `DELETE FROM ${this.table} WHERE idProduct = ?`,
       [id]
     );
-    
+    if (result.affectedRows > 0) {
+      this.invalidateCache(id);
+      this.invalidateCacheAll();
+    }
     return result.affectedRows > 0;
+  }
+
+  private invalidateCache(id: number): void {
+    // Invalidate cache for all queries that include the client ID
+    cache.del(`product:byId:${id}`);
+    cache.del(`product:byCode:${id}`);
+  }
+  private invalidateCacheAll(): void {
+    // Invalidate cache for all queries that include the client ID
+    cache.del(`products:all`);
   }
 }
