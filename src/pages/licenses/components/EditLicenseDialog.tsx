@@ -68,21 +68,6 @@ export function EditLicenseDialog({
     }
   }, [license, clients, products]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    if (!editableLicense) return;
-    
-    const updatedLicense = { ...editableLicense };
-    
-    if (field === 'idProduct' || field === 'idClient' || field === 'idLicence') {
-      // Para IDs, aseguramos que sea un número
-      updatedLicense[field] = parseInt(e.target.value) || 0;
-    } else {
-      // Para otros campos, mantener como string
-      updatedLicense[field as keyof typeof updatedLicense] = e.target.value as any;
-    }
-    
-    setEditableLicense(updatedLicense);
-  };
 
   const handleSave = async () => {
     if (!editableLicense || !client || !product) return;
@@ -162,7 +147,7 @@ export function EditLicenseDialog({
 
           {/* Fecha de Expiración - Editable */}
           <div>
-            <label className="block text-sm font-medium mb-1">Fecha de Expiración</label>
+            <label className="text-sm font-medium mb-1">Fecha de Expiración</label>
             <DatePicker
               date={selectedDate}
               setDate={setSelectedDate}

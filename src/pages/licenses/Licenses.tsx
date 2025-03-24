@@ -2,7 +2,6 @@ import { Suspense, useState, useMemo } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import { FixedSizeList as VirtualizedList } from "react-window";
 import useLicensesData from "./hooks/useLicensesData";
 import useSearchAndPagination from "./hooks/useSearchAndPagination";
 import { LicenseFilterCombobox } from "./components/ComboBox";
@@ -13,7 +12,7 @@ import { Edit } from "lucide-react";
 const Licenses = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-  const { licenses, clients, products, isLoading, isAllLoaded, fetchLicenses, fetchClients, fetchProducts } = useLicensesData();
+  const { licenses, clients, products, isAllLoaded, fetchLicenses, fetchClients, fetchProducts } = useLicensesData();
   const [filterType, setFilterType] = useState("");
   const [selectedLicense, setSelectedLicense] = useState<Mt4Licence | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
