@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Mt4Licence, Mt4Client, Mt4Product } from "@/entities/entities/client.entity";
 import {
   Dialog,
