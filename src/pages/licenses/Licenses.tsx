@@ -79,7 +79,7 @@ const Licenses = () => {
         { value: client?.Nombre || "-" },
         { value: client?.Broker || "-" },
         { value: product?.Product || "-" },
-        { value: license.expiration.toString() },
+        { value: license.expiration.toString().split("T")[0] },
       ],
     };
   });
