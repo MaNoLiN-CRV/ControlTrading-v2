@@ -102,9 +102,9 @@ export function EditLicenseDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gray-800 text-white border border-gray-700 max-w-md mx-auto">
+      <DialogContent className="backdrop-blur-lg bg-gray-800/30 text-white border border-gray-700/40 shadow-lg max-w-md mx-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Editar Licencia #{editableLicense.idLicence}</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-white">Editar Licencia #{editableLicense.idLicence}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 my-4">
@@ -114,7 +114,7 @@ export function EditLicenseDialog({
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-800/80 text-white rounded-md border border-gray-600/80 focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/80 backdrop-blur-sm"
             />
           </div>
           
@@ -125,7 +125,7 @@ export function EditLicenseDialog({
               type="text"
               value={client?.MT4ID || "-"}
               disabled
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded-md border border-gray-600 opacity-75"
+              className="w-full px-3 py-2 bg-gray-700/70 text-white rounded-md border border-gray-600/70 opacity-75 backdrop-blur-sm"
             />
           </div>
 
@@ -136,7 +136,7 @@ export function EditLicenseDialog({
               type="text"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-800/80 text-white rounded-md border border-gray-600/80 focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/80 backdrop-blur-sm"
             />
           </div>
 
@@ -146,27 +146,28 @@ export function EditLicenseDialog({
               date={selectedDate}
               setDate={setSelectedDate}
               placeholder="Seleccionar fecha de expiración"
+              className="bg-gray-800/80 border-gray-600/80 backdrop-blur-sm"
             />
-            <p className="mt-1 text-xs text-gray-400">Haz clic para seleccionar una fecha</p>
+            <p className="mt-1 text-xs text-gray-300">Haz clic para seleccionar una fecha</p>
           </div>
         </div>
 
         {errorMessage && (
-          <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
+          <div className="text-red-500 text-sm mt-2 bg-red-500/10 p-2 rounded-md backdrop-blur-sm">{errorMessage}</div>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="mt-6">
           <Button
             variant="outline"
             onClick={onClose}
-            className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+            className="bg-gray-700/70 text-white border-gray-600/70 hover:bg-gray-600/80 backdrop-blur-sm"
           >
             Cancelar
           </Button>
           <Button 
             onClick={handleSave}
             disabled={isUpdating}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600/80 hover:bg-blue-700/90 text-white backdrop-blur-sm"
           >
             {isUpdating ? "Guardando..." : "Guardar cambios"}
           </Button>
