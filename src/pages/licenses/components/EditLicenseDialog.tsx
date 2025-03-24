@@ -35,7 +35,7 @@ export function EditLicenseDialog({
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   
-  // Campos editables para cliente y producto
+  // Editable fields
   const [clientName, setClientName] = useState("");
   const [productName, setProductName] = useState("");
 
@@ -76,19 +76,15 @@ export function EditLicenseDialog({
       setIsUpdating(true);
       setErrorMessage("");
       
-      // Actualizar la fecha de expiración
       if (selectedDate) {
         editableLicense.expiration = selectedDate;
       }
-      
-      // Crear copias de los objetos para actualizarlos
+
       const updatedClient = { ...client, Nombre: clientName };
       const updatedProduct = { ...product, Product: productName };
       
-      // Primero actualizamos la licencia
       await ApiService.updateLicence(editableLicense);
       
-      // Luego actualizamos el cliente y el producto
       await ApiService.updateClient(updatedClient);
       await ApiService.updateProduct(updatedProduct);
       
@@ -102,7 +98,6 @@ export function EditLicenseDialog({
     }
   };
 
-  // Si no hay licencia para editar, no renderizar nada
   if (!editableLicense) return null;
 
   return (
@@ -145,7 +140,6 @@ export function EditLicenseDialog({
             />
           </div>
 
-          {/* Fecha de Expiración - Editable */}
           <div>
             <label className="text-sm font-medium mb-1">Fecha de Expiración</label>
             <DatePicker
