@@ -86,7 +86,7 @@ export class Mt4ProductService implements BaseService<Mt4Product> {
     
     if (result.affectedRows > 0) {
       this.invalidateCache(id);
-      this.invalidateCache
+      this.invalidateCacheAll();
     }
     return result.affectedRows > 0;
   }
