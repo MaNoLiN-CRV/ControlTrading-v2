@@ -9,8 +9,24 @@ const Products = () => {
   const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   
-  const { products, isLoading, fetchProducts, updateProductDemoDays } = useProductsData();
-  const { search, handleSearchChange, filteredProducts } = useProductsSearch(products);
+  const { 
+    products, 
+    isLoading, 
+    isUpdating, 
+    fetchProducts, 
+    updateProductDemoDays 
+  } = useProductsData();
+  
+  const { 
+    search, 
+    handleSearchChange, 
+    filteredProducts 
+  } = useProductsSearch(products);
+
+  const handleUpdateProductDemoDays = (id: number, value: string) => {
+    if (id === undefined) return;
+    updateProductDemoDays(id, value);
+  };
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -55,12 +71,25 @@ const Products = () => {
                     <td className="border border-gray-700/40 px-4 py-2">{product.Product}</td>
                     <td className="border border-gray-700/40 px-4 py-2">{product.version}</td>
                     <td className="border border-gray-700/40 px-4 py-2">
-                      <input
-                        type="text"
-                        value={product.DemoDays}
-                        onChange={(e) => updateProductDemoDays(product.idProduct, e.target.value)}
-                        className="w-full px-2 py-1 bg-gray-700/80 text-white rounded-lg border border-gray-600/80 focus:outline-none focus:ring-2 focus:ring-blue-500/70 backdrop-blur-sm transition"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={product.DemoDays}
+                          onChange={(e) => 
+                            product.idProduct !== undefined && 
+                            handleUpdateProductDemoDays(product.idProduct, e.target.value)
+                          }
+                          className={`w-full px-2 py-1 bg-gray-700/80 text-white rounded-lg border border-gray-600/80 focus:outline-none focus:ring-2 focus:ring-blue-500/70 backdrop-blur-sm transition ${
+                            product.idProduct !== undefined && isUpdating[product.idProduct] ? 'opacity-50' : ''
+                          }`}
+                          disabled={product.idProduct !== undefined && isUpdating[product.idProduct]}
+                        />
+                        {product.idProduct !== undefined && isUpdating[product.idProduct] && (
+                          <div className="absolute inset-y-0 right-2 flex items-center">
+                            <div className="animate-spin h-4 w-4 border-2 border-blue-500 rounded-full border-t-transparent"></div>
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="border border-gray-700/40 px-4 py-2">
                       <a

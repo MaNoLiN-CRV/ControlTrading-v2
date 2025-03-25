@@ -67,6 +67,11 @@ class CacheDecorator {
     return updatedProduct;
   }
 
+  async updateProductDemoDays(id: number, demoDays: number): Promise<void> {
+    await this.apiService.updateProductDemoDays(id, demoDays);
+    this.invalidateCache("products"); // Invalidate products cache
+  }
+
   // Method to invalidate a specific cache entry
   invalidateCache(cacheKey: string): void {
     if (this.cache.has(cacheKey)) {

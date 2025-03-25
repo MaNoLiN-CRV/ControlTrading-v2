@@ -4,7 +4,7 @@ export interface Mt4Product {
   Code: string;
   version: number;
   idShop: number;
-  DemoDays: number;
+  DemoDays: number | string;
   link: string;
   comentario: string;
 }
