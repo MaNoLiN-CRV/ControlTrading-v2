@@ -33,7 +33,7 @@ class ApiService {
   }
 
   async updateProductDemoDays(id: number, demoDays: number): Promise<Mt4Product> {
-    const response = await this.api.put(`/products/${id}`, { DemoDays: demoDays });
+    const response = await api.put(`/products/${id}`, { DemoDays: demoDays });
     return response.data;
   }
 }

@@ -3,7 +3,7 @@ import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import useLicensesData from "./hooks/useLicensesData";
-import useSearchAndPagination from "./hooks/useSearchAndPagination";
+import useSearchAndPagination from "../../hooks/useSearchAndPagination";
 import { LicenseFilterCombobox } from "./components/ComboBox";
 import { EditLicenseDialog } from "./components/EditLicenseDialog";
 import { Mt4Licence } from "@/entities/entities/client.entity";
@@ -65,7 +65,7 @@ const Licenses = () => {
     paginatedItems: paginatedLicenses,
     handleSearchChange,
     setCurrentPage,
-  } = useSearchAndPagination(licenses, 20, sortLicensesById, customFilterFunction);
+  } = useSearchAndPagination(licenses, 10, sortLicensesById, customFilterFunction);
 
   if (!isAuthenticated()) {
     navigate("/login");
