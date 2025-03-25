@@ -1,5 +1,5 @@
 import ApiService from "./ApiService";
-import { Mt4Client, Mt4Licence, Mt4Product } from "@/entities/entities/client.entity";
+import { Mt4Client, Mt4Licence, Mt4Licence2, Mt4Product } from "@/entities/entities/client.entity";
 import Cache from "./Cache";
 
 class CacheDecorator {
@@ -74,6 +74,27 @@ class CacheDecorator {
   async updateProductDemoDays(id: number, demoDays: number): Promise<void> {
     await this.apiService.updateProductDemoDays(id, demoDays);
     this.invalidateCache("products"); // Invalidate products cache
+  }
+
+  async createMt4License2(licence: Mt4Licence2): Promise<Mt4Licence2> {
+    const newLicence = await this.apiService.createMt4License2(licence);
+    this.invalidateCache("licenses"); // Invalidate licenses cache
+    return newLicence;
+  }
+
+  async updateMt4License2(id: number, mt4id: string): Promise<Mt4Licence2> {
+    const updatedLicence = await this.apiService.updateMt4License2(id, mt4id);
+    this.invalidateCache("licenses"); // Invalidate licenses cache
+    return updatedLicence;
+  }
+
+  async getMt4Licenses2(): Promise<Mt4Licence2[]> {
+    return this.getWithDedupe("licenses", () => this.apiService.getMt4Licenses2());
+  }
+
+  async deleteMt4License2(id: number): Promise<void> {
+    await this.apiService.deleteMt4License2(id);
+    this.invalidateCache("licenses"); // Invalidate licenses
   }
 
   // Method to invalidate a specific cache entry
