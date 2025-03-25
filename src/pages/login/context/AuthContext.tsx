@@ -1,45 +1,52 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import useAuth from "../hooks/useAuth";
-import { updateAuthToken } from "@/services/api"; // Import the token updater
+import { updateAuthToken } from "@/services/api";
 
 const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = useAuth();
   const [initialCheckComplete, setInitialCheckComplete] = useState(false);
+  const isInitializing = useRef(true);
   
   // Perform token verification only once at the beginning
   useEffect(() => {
     const checkToken = async () => {
-      if (!initialCheckComplete) {
-        await auth.verifyToken();
-        updateAuthToken(); // Update token in API instance
-        setInitialCheckComplete(true);
+      if (isInitializing.current) {
+        isInitializing.current = false;
+        try {
+          await auth.verifyToken(true); 
+          updateAuthToken();
+        } catch (error) {
+          console.error("Error verificando token:", error);
+        } finally {
+          setInitialCheckComplete(true);
+        }
       }
     };
     
     checkToken();
-  }, [initialCheckComplete]);
+  }, []);
 
-  // Wrap login and logout to update API headers
   const enhancedAuth = {
     ...auth,
     login: async (...args: Parameters<typeof auth.login>) => {
       const result = await auth.login(...args);
-      updateAuthToken(); // Update token after login
+      if (result) {
+        updateAuthToken();
+      }
       return result;
     },
     logout: () => {
       auth.logout();
-      updateAuthToken(); // Update token after logout
+      updateAuthToken(); 
     }
   };
 
-  // Only render children after initial token check
-  if (!initialCheckComplete && auth.loading) {
+  if (!initialCheckComplete) {
     return (
       <div className="flex items-center justify-center min-h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">Verificando sesión...</div>
       </div>
     );
   }

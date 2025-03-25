@@ -32,7 +32,6 @@ const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
-  // Ref to track if token has been verified in this session
   const hasVerifiedToken = useRef(false);
   
   const safeSetUser = useSafeDispatch(setUser);
@@ -40,7 +39,6 @@ const useAuth = () => {
   const safeSetError = useSafeDispatch(setError);
   const safeSetIsTokenValid = useSafeDispatch(setIsTokenValid);
 
-  // Verify token function - only call this explicitly when needed
   const verifyToken = async (force = false) => {
     if (hasVerifiedToken.current && !force) {
       return isTokenValid;
@@ -56,7 +54,6 @@ const useAuth = () => {
 
     try {
       safeSetLoading(true);
-      // Use the centralized API instance
       const response = await api.get<VerifyResponse>("/verify");
       const isValid = response.data.isValid;
       
@@ -81,34 +78,38 @@ const useAuth = () => {
     }
   };
 
+  // Login
   const login = async (username: string, password: string) => {
+    if (loading) return false; 
+    
     safeSetLoading(true);
     safeSetError(null);
 
     try {
-      // Use the centralized API instance
       const response = await api.post<LoginResponse>("/login", {
         username,
         password,
       } as LoginRequest);
 
       if (response.data.success && response.data.token && response.data.user) {
-        safeSetUser(response.data.user);
         localStorage.setItem("authToken", response.data.token);
+        safeSetUser(response.data.user);
         safeSetIsTokenValid(true);
+        hasVerifiedToken.current = true;
         return true;
       } else {
-        throw new Error(response.data.message || "Invalid credentials");
+        throw new Error(response.data.message || "Credenciales inválidas");
       }
     } catch (err: any) {
       console.error("Login error:", err);
-      safeSetError(err.message || "An error occurred");
+      safeSetError(err.message || "Ocurrió un error al iniciar sesión");
       return false;
     } finally {
       safeSetLoading(false);
     }
   };
 
+  // Logout
   const logout = () => {
     safeSetUser(null);
     localStorage.removeItem("authToken");

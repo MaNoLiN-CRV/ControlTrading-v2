@@ -6,7 +6,6 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Licenses from "./pages/licenses/Licenses";
 import Products from "./pages/products/Products";
 import { useAuthContext } from "./pages/login/context/AuthContext";
-// No need to import ApiFactory here anymore
 
 function AppRoutes() {
   const { isTokenValid, loading } = useAuthContext();
@@ -14,14 +13,14 @@ function AppRoutes() {
   
   useEffect(() => {
     if (isTokenValid === false && !loading) {
-      navigate("/login");
+      navigate("/login", { replace: true }); 
     }
   }, [isTokenValid, loading, navigate]);
   
   if (loading || isTokenValid === null) {
     return (
       <div className="flex items-center justify-center min-h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">Cargando...</div>
       </div>
     );
   }
@@ -31,7 +30,7 @@ function AppRoutes() {
       {/* Redirect root ("/") to dashboard or login depending on auth state */}
       <Route 
         path="/" 
-        element={isTokenValid ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
+        element={isTokenValid ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} 
       />
       <Route path="/login" element={<Login />} />
       <Route

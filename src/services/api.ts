@@ -4,15 +4,29 @@ import Http from "@/fetcher/http";
 // API base URL
 const API_BASE_URL = "http://192.168.1.23:3000/api";
 
-// Singleton API instance
-const api: Http = ApiFactory.createApiFactory("Fetch", API_BASE_URL);
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+  'Authorization': ''
+};
 
-// Update token when it changes
+const getInitialToken = () => {
+  const token = localStorage.getItem("authToken");
+  return token ? `Bearer ${token}` : '';
+};
+
+const api: Http = ApiFactory.createApiFactory(
+  "Fetch", 
+  API_BASE_URL,
+  {
+    ...defaultHeaders,
+    'Authorization': getInitialToken()
+  }
+);
+
 export const updateAuthToken = () => {
   const token = localStorage.getItem("authToken");
   api.updateHeaders({
     'Authorization': token ? `Bearer ${token}` : '',
-    'Content-Type': 'application/json',
   });
 };
 
