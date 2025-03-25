@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import ApiFactory from "@/fetcher/ApiFactory";
 import useSafeDispatch from "@/hooks/useSafeDispatch";
+import api from "@/services/api";
 
 interface LoginRequest {
   username: string;
@@ -56,7 +56,7 @@ const useAuth = () => {
 
     try {
       safeSetLoading(true);
-      const api = ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
+      // Use the centralized API instance
       const response = await api.get<VerifyResponse>("/verify");
       const isValid = response.data.isValid;
       
@@ -86,8 +86,7 @@ const useAuth = () => {
     safeSetError(null);
 
     try {
-      const api = ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
-      
+      // Use the centralized API instance
       const response = await api.post<LoginResponse>("/login", {
         username,
         password,

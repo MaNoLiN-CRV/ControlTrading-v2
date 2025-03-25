@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
+import { updateAuthToken } from "@/services/api"; // Import the token updater
 
 const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
 
@@ -12,12 +13,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const checkToken = async () => {
       if (!initialCheckComplete) {
         await auth.verifyToken();
+        updateAuthToken(); // Update token in API instance
         setInitialCheckComplete(true);
       }
     };
     
     checkToken();
   }, [initialCheckComplete]);
+
+  // Wrap login and logout to update API headers
+  const enhancedAuth = {
+    ...auth,
+    login: async (...args: Parameters<typeof auth.login>) => {
+      const result = await auth.login(...args);
+      updateAuthToken(); // Update token after login
+      return result;
+    },
+    logout: () => {
+      auth.logout();
+      updateAuthToken(); // Update token after logout
+    }
+  };
 
   // Only render children after initial token check
   if (!initialCheckComplete && auth.loading) {
@@ -28,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
   }
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={enhancedAuth}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => {

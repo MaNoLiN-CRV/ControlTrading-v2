@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import ApiFactory from "./fetcher/ApiFactory";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "@/pages/login/Login";
 import ProtectedRoute from "./components/wrappers/ProtectedRoute";
@@ -7,6 +6,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Licenses from "./pages/licenses/Licenses";
 import Products from "./pages/products/Products";
 import { useAuthContext } from "./pages/login/context/AuthContext";
+// No need to import ApiFactory here anymore
 
 function AppRoutes() {
   const { isTokenValid, loading } = useAuthContext();
@@ -63,13 +63,6 @@ function AppRoutes() {
 }
 
 function App() {
-  useEffect(() => {
-    ApiFactory.createApiFactory("Fetch", "http://localhost:3000/api");
-    return () => {
-      console.log("App unmounted");
-    };
-  }, []);
-
   return <AppRoutes />;
 }
 
