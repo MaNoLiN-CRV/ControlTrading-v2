@@ -7,6 +7,7 @@ import cacheRoutes from './routes/cache.routes';
 import licenceRoutes from './routes/licence.routes';
 import statisticsRoutes from './routes/statistics.routes';
 import authentication from './middleware/authentication';
+import licence2Routes from './routes/mt4licence2.routes';
 import cors from 'cors';
 
 const app = express();
@@ -24,5 +25,6 @@ app.use('/api/products', authentication, mt4productRoutes);
 app.use('/api/cache', authentication, cacheRoutes);
 app.use('/api/licences', authentication, licenceRoutes);
 app.use('/api/statistics', authentication, statisticsRoutes);
+app.use('/api/licences2', authentication, licence2Routes);
 
 export default app;

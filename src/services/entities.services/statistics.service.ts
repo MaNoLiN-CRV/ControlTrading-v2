@@ -3,6 +3,13 @@ import { Cacheable } from '../../cache/cacheable';
 import pool from '../../config/database';
 import type { RowDataPacket } from 'mysql2';
 
+interface StatsOverview {
+  activeLicences: number;
+  totalLicences: number;
+  totalProducts: number;
+  totalClients: number;
+}
+
 export class StatisticsService {
   private static instance: StatisticsService;
   
@@ -16,7 +23,7 @@ export class StatisticsService {
   }
 
   @Cacheable('stats:overview')
-  async getOverviewStats(): Promise<any> {
+  async getOverviewStats(): Promise<StatsOverview> {
     const today = new Date().toISOString().split('T')[0];
 
     const [results] = await pool.query<RowDataPacket[]>(`
@@ -27,7 +34,7 @@ export class StatisticsService {
         (SELECT COUNT(*) FROM mt4clients) as totalClients
     `, [today]);
 
-    return results[0];
+    return results[0] as StatsOverview;
   }
 
   @Cacheable('stats:productsUsage')
