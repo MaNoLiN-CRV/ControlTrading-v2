@@ -49,6 +49,10 @@ class CacheDecorator {
     return this.getWithDedupe("products", () => this.apiService.getProducts());
   }
 
+  async getStatsOverview(): Promise<any> {
+    return this.getWithDedupe("statsOverview", () => this.apiService.getStatsOverview());
+  }
+
   async updateLicence(licence: Mt4Licence): Promise<Mt4Licence> {
     const updatedLicence = await this.apiService.updateLicence(licence);
     this.invalidateCache("licenses"); // Invalidate licenses cache

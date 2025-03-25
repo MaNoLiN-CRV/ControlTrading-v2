@@ -1,5 +1,6 @@
-import api from "@/services/api"; // Import the centralized API instance
+import api from "@/services/api"; 
 import { Mt4Client, Mt4Licence, Mt4Product } from "@/entities/entities/client.entity";
+import StatsOverview from "@/entities/StatsOverview";
 
 class ApiService {
   async getLicenses(): Promise<Mt4Licence[]> {
@@ -14,6 +15,11 @@ class ApiService {
 
   async getProducts(): Promise<Mt4Product[]> {
     const response = await api.get<Mt4Product[]>("/products");
+    return response.data;
+  }
+  
+  async getStatsOverview(): Promise<StatsOverview> {
+    const response = await api.get<StatsOverview>("/statistics/overview");
     return response.data;
   }
 
