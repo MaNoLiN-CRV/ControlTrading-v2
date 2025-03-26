@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { useProductsData } from "./hooks/useProductsData";
 import useSearchAndPagination from "@/hooks/useSearchAndPagination";
-import { Search } from "lucide-react"; // Add icon import
+import { Search, Pencil } from "lucide-react"; // Add icon imports
+import { EditLinkDialog } from "./components/EditLinkDialog";
+import { Mt4Product } from "@/entities/entities/mt4product.entity";
 
 const Products = () => {
   const { isAuthenticated } = useAuthContext();
@@ -15,7 +17,8 @@ const Products = () => {
     isLoading, 
     isUpdating, 
     fetchProducts, 
-    updateProductDemoDays 
+    updateProductDemoDays,
+    updateProductLink
   } = useProductsData();
   
   const filterProducts = (product: any, searchText: string) => {
@@ -40,6 +43,18 @@ const Products = () => {
   const handleUpdateProductDemoDays = (id: number, value: string) => {
     if (id === undefined) return;
     updateProductDemoDays(id, value);
+  };
+
+  const [selectedProduct, setSelectedProduct] = useState<Mt4Product | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const handleEditLink = (product: Mt4Product) => {
+    setSelectedProduct(product);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleLinkUpdated = async (id: number, newLink: string) => {
+    await updateProductLink(id, newLink);
   };
 
   useEffect(() => {
@@ -123,13 +138,22 @@ const Products = () => {
                         </div>
                       </td>
                       <td className="border border-gray-700/40 px-4 py-2 text-center">
-                        <a
-                          href={product.link}
-                          className="text-blue-500 hover:text-blue-300 transition inline-block w-full"
-                          download
-                        >
-                          Descargar EX4
-                        </a>
+                        <div className="flex items-center justify-between px-2">
+                          <a
+                            href={product.link}
+                            className="text-blue-500 hover:text-blue-300 transition flex-1"
+                            download
+                          >
+                            Descargar EX4
+                          </a>
+                          <button
+                            onClick={() => handleEditLink(product)}
+                            className="p-1 text-blue-400 hover:text-blue-300 rounded focus:outline-none"
+                            title="Editar enlace"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -160,6 +184,15 @@ const Products = () => {
           </>
         )}
       </main>
+      <EditLinkDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => {
+          setIsEditDialogOpen(false);
+          setSelectedProduct(null);
+        }}
+        product={selectedProduct}
+        onLinkUpdated={handleLinkUpdated}
+      />
     </div>
   );
 };

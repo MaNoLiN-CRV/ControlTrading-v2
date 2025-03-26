@@ -71,11 +71,39 @@ export function useProductsData() {
     }
   });
 
+  const updateProductLink = useEventCallback(async (id: number, newLink: string) => {
+    safeSetIsUpdating((prev) => ({ ...prev, [id]: true }));
+
+    try {
+      const existingProduct = products.find((p) => p.idProduct === id);
+      if (!existingProduct) throw new Error("Product not found");
+
+      const updatedProduct = await ApiService.updateProduct({
+        ...existingProduct,
+        link: newLink
+      });
+      
+      safeSetProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.idProduct === id ? { ...p, link: newLink } : p
+        )
+      );
+      
+      return updatedProduct;
+    } catch (error) {
+      console.error("Error updating product link:", error);
+      throw error;
+    } finally {
+      safeSetIsUpdating((prev) => ({ ...prev, [id]: false }));
+    }
+  });
+
   return {
     products,
     isLoading,
     isUpdating,
     fetchProducts,
-    updateProductDemoDays
+    updateProductDemoDays,
+    updateProductLink
   };
 }
