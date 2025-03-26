@@ -42,11 +42,11 @@ const Dashboard = () => {
       <main className="container mx-auto p-4">
         <h1 className="text-4xl font-bold text-center mb-6">Dashboard</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card 1: Licenses */}
           <div className="bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
             <h2 className="text-xl font-semibold mb-3">Licencias</h2>
-            <p className="text-gray-300 mb-4">Gestiona las licencias de los clientes y sus productos asociados.</p>
+            <p className="text-gray-300 mb-4">Gestiona las licencias , clientes y productos asociados.</p>
             <button 
               onClick={() => navigate("/licenses")}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -75,13 +75,13 @@ const Dashboard = () => {
               onClick={() => navigate("/trading-station")}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
-              Ver soporte
+              Ver licencias v2
             </button>
           </div>
         </div>
         
         {/* Stats overview with glassmorphism */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="backdrop-blur-lg bg-white/10 p-6 rounded-xl border border-white/20 shadow-lg transition-all duration-300 hover:bg-white/[0.15] group">
             <h3 className="text-lg font-medium mb-2 text-gray-300 group-hover:text-white transition-colors">
               Licencias Activas

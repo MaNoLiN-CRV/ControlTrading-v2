@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { useProductsData } from "./hooks/useProductsData";
 import useSearchAndPagination from "@/hooks/useSearchAndPagination";
+import { Search } from "lucide-react"; // Add icon import
 
 const Products = () => {
   const { isAuthenticated } = useAuthContext();
@@ -17,6 +18,15 @@ const Products = () => {
     updateProductDemoDays 
   } = useProductsData();
   
+  const filterProducts = (product: any, searchText: string) => {
+    const searchLower = searchText.toLowerCase();
+    return (
+      product.Product.toLowerCase().includes(searchLower) ||
+      product.version.toString().includes(searchLower) ||
+      product.DemoDays.toString().includes(searchLower)
+    );
+  };
+
   const {
     search,
     currentPage,
@@ -24,7 +34,8 @@ const Products = () => {
     paginatedItems: paginatedProducts,
     handleSearchChange,
     setCurrentPage,
-  } = useSearchAndPagination(products, 10);
+    filteredItemsCount
+  } = useSearchAndPagination(products, 10, undefined, filterProducts);
 
   const handleUpdateProductDemoDays = (id: number, value: string) => {
     if (id === undefined) return;
@@ -44,18 +55,34 @@ const Products = () => {
       <Navbar />
       <main className="w-full p-4">
         <h1 className="text-4xl font-bold text-center mb-6">Productos</h1>
+        
+        {/* Search input with stats */}
         <div className="mb-4 px-4 max-w-5xl mx-auto">
-          <input
-            type="text"
-            placeholder="Buscar productos..."
-            value={search}
-            onChange={handleSearchChange}
-            className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Buscar por nombre, versión o días de demo..."
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 bg-gray-800/70 text-white rounded-lg border border-gray-700 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 transition backdrop-blur-sm
+                placeholder:text-gray-400"
+            />
+          </div>
+          {search && (
+            <div className="mt-2 text-sm text-gray-400">
+              Encontrados: {filteredItemsCount} productos
+            </div>
+          )}
         </div>
+
         {isLoading ? (
           <div className="flex justify-center my-8">
             <div className="text-white text-xl">Cargando productos...</div>
+          </div>
+        ) : paginatedProducts.length === 0 ? (
+          <div className="text-center text-gray-400 my-8">
+            No se encontraron productos que coincidan con la búsqueda
           </div>
         ) : (
           <>

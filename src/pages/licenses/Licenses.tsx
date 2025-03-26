@@ -20,7 +20,7 @@ const Licenses = () => {
   // Function to sort licenses by idLicence in descending order
   const sortLicensesById = (a: any, b: any) => b.idLicence - a.idLicence;
 
-  // Filtrar opciones para el ComboBox
+  // Options for the combobox filter
   const filterOptions = useMemo(() => [
     { value: "all", label: "Todos los campos" },
     { value: "mt4id", label: "MT4 ID" },
@@ -29,7 +29,7 @@ const Licenses = () => {
     { value: "producto", label: "Producto" },
   ], []);
 
-  // Función personalizada para filtrar licencias según el tipo de filtro
+  // Custom filter function for the search input
   const customFilterFunction = (item: any, searchText: string) => {
     if (!searchText) return true;
     
@@ -88,6 +88,7 @@ const Licenses = () => {
     await fetchProducts(true);
   };
 
+  // Data for the table
   const tableData = paginatedLicenses.map((license) => {
     const client = clients.find((c) => c.idClient === license.idClient);
     const product = products.find((p) => p.idProduct === license.idProduct);

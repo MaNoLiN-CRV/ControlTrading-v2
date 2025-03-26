@@ -4,12 +4,23 @@
 
 @tailwind utilities;
 
+:root {
+  background-color: rgb(3, 7, 18);
+}
+
 @layer base {
-  html, body {
+  html, 
+  body {
     @apply h-full w-full m-0 p-0;
+    background-color: rgb(3, 7, 18);
   }
   #root {
     @apply h-full w-full;
+    background-color: rgb(3, 7, 18);
   }
+}
+
+.app-gradient {
+  @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black;
 }
 
