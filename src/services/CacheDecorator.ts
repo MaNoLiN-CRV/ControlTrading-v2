@@ -78,23 +78,23 @@ class CacheDecorator {
 
   async createMt4License2(licence: Mt4Licence2): Promise<Mt4Licence2> {
     const newLicence = await this.apiService.createMt4License2(licence);
-    this.invalidateCache("licenses"); // Invalidate licenses cache
+    this.invalidateCache("licenses2"); // Invalidate licenses cache
     return newLicence;
   }
 
   async updateMt4License2(id: number, mt4id: string): Promise<Mt4Licence2> {
     const updatedLicence = await this.apiService.updateMt4License2(id, mt4id);
-    this.invalidateCache("licenses"); // Invalidate licenses cache
+    this.invalidateCache("licenses2"); // Invalidate licenses cache
     return updatedLicence;
   }
 
   async getMt4Licenses2(): Promise<Mt4Licence2[]> {
-    return this.getWithDedupe("licenses", () => this.apiService.getMt4Licenses2());
+    return this.getWithDedupe("licenses2", () => this.apiService.getMt4Licenses2());
   }
 
   async deleteMt4License2(id: number): Promise<void> {
     await this.apiService.deleteMt4License2(id);
-    this.invalidateCache("licenses"); // Invalidate licenses
+    this.invalidateCache("licenses2"); // Invalidate licenses
   }
 
   // Method to invalidate a specific cache entry
