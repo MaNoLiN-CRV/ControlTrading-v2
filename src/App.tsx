@@ -7,6 +7,7 @@ import Licenses from "./pages/licenses/Licenses";
 import Products from "./pages/products/Products";
 import { useAuthContext } from "./pages/login/context/AuthContext";
 import Mt4Licenses2 from "./pages/mt4licenses2/Mt4Licenses2";
+import Layout from './components/Layout';
 
 function AppRoutes() {
   const { isTokenValid, loading } = useAuthContext();
@@ -27,45 +28,47 @@ function AppRoutes() {
   }
   
   return (
-    <Routes>
-      {/* Redirect root ("/") to dashboard or login depending on auth state */}
-      <Route 
-        path="/" 
-        element={isTokenValid ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} 
-      />
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/dashboard"
+    <Layout>
+      <Routes>
+        {/* Redirect root ("/") to dashboard or login depending on auth state */}
+        <Route 
+          path="/" 
+          element={isTokenValid ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} 
+        />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/licenses"
+          element={
+            <ProtectedRoute>
+              <Licenses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <Products />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="trading-station"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Mt4Licenses2 />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/licenses"
-        element={
-          <ProtectedRoute>
-            <Licenses />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/products"
-        element={
-          <ProtectedRoute>
-            <Products />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="trading-station"
-      element={
-        <ProtectedRoute>
-          <Mt4Licenses2 />
-        </ProtectedRoute>
-      }
-      />
-    </Routes>
+        />
+      </Routes>
+    </Layout>
   );
 }
 

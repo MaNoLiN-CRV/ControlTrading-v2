@@ -20,6 +20,15 @@
   }
 }
 
+main {
+  padding-top: 4rem; 
+}
+
+.backdrop-blur-navbar {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
 .app-gradient {
   @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black;
 }
