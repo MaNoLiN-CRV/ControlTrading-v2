@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../login/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Minus, Trash2, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { useMt4Licenses2Data } from "./hooks/useMt4Licenses2Data";
 import useSearchAndPagination from "@/hooks/useSearchAndPagination";
@@ -30,6 +30,8 @@ const Mt4Licenses2 = () => {
     setCurrentPage,
   } = useSearchAndPagination(licenses, 10);
 
+  const [licenseCount, setLicenseCount] = useState(1);
+
   const handleUpdateMt4ID = async (id: number, value: string) => {
     if (!id) return;
     try {
@@ -39,11 +41,12 @@ const Mt4Licenses2 = () => {
     }
   };
 
-  const handleAddLicense = async () => {
+  const handleAddLicenses = async () => {
     try {
-      await addLicense();
+      const promises = Array(licenseCount).fill(null).map(() => addLicense());
+      await Promise.all(promises);
     } catch (error) {
-      console.error("Error adding license:", error);
+      console.error("Error adding licenses:", error);
     }
   };
 
@@ -65,6 +68,44 @@ const Mt4Licenses2 = () => {
     }
   }, [isAuthenticated, navigate, fetchLicenses]);
 
+  const AddLicenseControl = () => (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        onClick={() => setLicenseCount(prev => Math.max(1, prev - 1))}
+        className="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 p-0 rounded-full"
+      >
+        <Minus className="h-4 w-4" />
+      </Button>
+      
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          value={licenseCount}
+          onChange={(e) => setLicenseCount(Math.max(1, parseInt(e.target.value) || 1))}
+          className="w-16 px-2 py-1 text-center bg-gray-800 text-white rounded-md border border-gray-600 
+            focus:outline-none focus:ring-2 focus:ring-blue-500/70"
+        />
+      </div>
+
+      <Button
+        variant="outline"
+        onClick={() => setLicenseCount(prev => prev + 1)}
+        className="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 p-0 rounded-full"
+      >
+        <Plus className="h-4 w-4" />
+      </Button>
+
+      <Button
+        onClick={handleAddLicenses}
+        className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 ml-2"
+      >
+        <Plus className="h-5 w-5" />
+        Añadir {licenseCount > 1 ? `${licenseCount} Licencias` : 'Licencia'}
+      </Button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <Navbar />
@@ -72,13 +113,7 @@ const Mt4Licenses2 = () => {
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-4xl font-bold">Licencias MT4 v2</h1>
-            <Button
-              onClick={handleAddLicense}
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-            >
-              <Plus className="h-5 w-5" />
-              Añadir Licencia
-            </Button>
+            <AddLicenseControl />
           </div>
 
           <div className="mb-4">
