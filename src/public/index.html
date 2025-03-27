@@ -6,6 +6,54 @@
     <title>Control Trading API Documentation</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* CSS for collapsible header */
+        header {
+            transition: all 0.3s ease-in-out;
+            height: auto;
+            overflow: hidden;
+        }
+
+        header.collapsed {
+            height: 4rem; 
+            padding: 1rem;
+        }
+
+        header.collapsed h1 {
+            font-size: 1.5rem; /* Smaller title when collapsed */
+        }
+
+        header.collapsed p {
+            display: none; /* Hide the description when collapsed */
+        }
+
+        /* CSS for scrollable navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--background);
+            z-index: 11;
+            overflow-x: auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap; 
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            display: inline-block; /* Make them inline blocks */
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 <body>
     <header class="glass">
@@ -13,9 +61,21 @@
         <p>REST API Documentation v1.0</p>
     </header>
 
+    <nav class="glass">
+        <a href="#authentication">Authentication</a>
+        <a href="#clients">Clients</a>
+        <a href="#products">Products</a>
+        <a href="#licences">Licences</a>
+        <a href="#statistics">Statistics</a>
+        <a href="#trading">Trading</a>
+        <a href="#cache">Cache</a>
+        <a href="#licence2">Licence2</a>
+        <a href="#legacy-system">Legacy System</a>
+    </nav>
+
     <main>
         <!-- Authentication Endpoints -->
-        <section class="endpoint-group">
+        <section id="authentication" class="endpoint-group">
             <h2>Authentication</h2>
             
             <div class="endpoint glass">
@@ -63,7 +123,7 @@
         </section>
 
         <!-- Clients Endpoints -->
-        <section class="endpoint-group">
+        <section id="clients" class="endpoint-group">
             <h2>Clients</h2>
 
             <div class="endpoint glass">
@@ -187,7 +247,7 @@
         </section>
 
         <!-- Products Endpoints -->
-        <section class="endpoint-group">
+        <section id="products" class="endpoint-group">
             <h2>Products</h2>
 
             <div class="endpoint glass">
@@ -348,7 +408,7 @@
         </section>
 
         <!-- Licences Endpoints -->
-        <section class="endpoint-group">
+        <section id="licences" class="endpoint-group">
             <h2>Licences</h2>
 
             <div class="endpoint glass">
@@ -469,7 +529,7 @@
         </section>
 
         <!-- Statistics Endpoints -->
-        <section class="endpoint-group">
+        <section id="statistics" class="endpoint-group">
             <h2>Statistics</h2>
 
             <div class="endpoint glass">
@@ -535,7 +595,7 @@
         </section>
 
         <!-- Trading Endpoints -->
-        <section class="endpoint-group">
+        <section id="trading" class="endpoint-group">
             <h2>Trading</h2>
 
             <div class="endpoint glass">
@@ -633,7 +693,7 @@
         </section>
 
         <!-- Cache Endpoints -->
-        <section class="endpoint-group">
+        <section id="cache" class="endpoint-group">
             <h2>Cache</h2>
 
             <div class="endpoint glass">
@@ -676,7 +736,7 @@
         </section>
 
          <!-- Licence2 Endpoints -->
-        <section class="endpoint-group">
+        <section id="licence2" class="endpoint-group">
             <h2>Licence2</h2>
 
             <div class="endpoint glass">
@@ -834,7 +894,7 @@
         </section>
 
         <!-- Legacy System -->
-        <section class="endpoint-group">
+        <section id="legacy-system" class="endpoint-group">
             <h2>Legacy System</h2>
 
             <div class="endpoint glass">
@@ -863,5 +923,17 @@ hash_</code></pre>
     <footer class="glass">
         <p>© 2024 Control Trading. All rights reserved.</p>
     </footer>
+
+    <script>
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('collapsed');
+            } else {
+                header.classList.remove('collapsed');
+            }
+        });
+    </script>
 </body>
 </html>
