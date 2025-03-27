@@ -1,4 +1,3 @@
-.html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,33 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Control Trading API Documentation</title>
     <link rel="stylesheet" href="css/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   </head>
 
   <body>
-    <header>
+    <header class="glass">
       <h1>Control Trading API</h1>
-      <p>API Documentation v1.0</p>
+      <p>REST API Documentation v1.0</p>
     </header>
 
     <main>
+      <!-- Authentication Endpoints -->
       <section class="endpoint-group">
         <h2>Authentication</h2>
-        <div class="endpoint">
-          <h3>POST /api/login</h3>
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/login</h3>
           <div class="details">
             <div class="request">
-              <h4>Request</h4>
-              <pre>
-{
+              <h4>Request Body</h4>
+              <pre><code>{
   "username": "string",
   "password": "string"
-}</pre
-              >
+}</code></pre>
             </div>
             <div class="response">
               <h4>Response</h4>
-              <pre>
-{
+              <pre><code>{
   "success": true,
   "token": "string",
   "user": {
@@ -40,128 +38,166 @@
     "username": "string",
     "role": "string"
   }
-}</pre
-              >
+}</code></pre>
             </div>
           </div>
         </div>
-      </section>
 
-      <section class="endpoint-group">
-        <h2>Legacy Endpoints</h2>
-        <div class="endpoint">
-          <h3>GET /expireOff.aspx</h3>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/login/verify</h3>
           <div class="details">
             <div class="request">
-              <h4>Query Parameters</h4>
-              <pre>
-{
-  "mt4": "string",
-  "name": "string",
-  "product": "string",
-  "broker": "string",
-  "check": "string"
-}</pre
-              >
+              <h4>Headers</h4>
+              <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
             </div>
             <div class="response">
-              <h4>Response (Text)</h4>
-              <pre>
-YYYY.MM.DD
-hash_</pre
-              >
+              <h4>Response</h4>
+              <pre><code>{
+  "isValid": true
+}</code></pre>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- Clients Endpoints -->
       <section class="endpoint-group">
-        <h2>Trading</h2>
-        <div class="endpoint">
-          <h3>GET /api/trading/active-licences</h3>
+        <h2>Clients</h2>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/clients</h3>
           <div class="details">
-            <div class="response">
-              <h4>Response</h4>
-              <pre>
-[{
-  "idLicence": "number",
-  "MT4ID": "string",
-  "Nombre": "string",
-  "Product": "string",
-  "expiration": "date"
-}]</pre
-              >
-            </div>
+            <h4>Headers</h4>
+            <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
           </div>
         </div>
 
-        <div class="endpoint">
-          <h3>GET /api/trading/client/:clientId</h3>
-          <div class="details">
-            <div class="response">
-              <h4>Response</h4>
-              <pre>
-{
-  "client": {
-    "idClient": "number",
-    "MT4ID": "string",
-    "Nombre": "string"
-  },
-  "licences": [{
-    "idLicence": "number",
-    "product": "object",
-    "expiration": "date"
-  }]
-}</pre
-              >
-            </div>
-          </div>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/clients/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/clients</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method put">PUT</span> /api/clients/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method delete">DELETE</span> /api/clients/:id</h3>
         </div>
       </section>
 
+      <!-- Products Endpoints -->
       <section class="endpoint-group">
         <h2>Products</h2>
-        <div class="endpoint">
-          <h3>GET /api/products</h3>
-          <div class="details">
-            <div class="response">
-              <h4>Response</h4>
-              <pre>
-[{
-  "idProduct": "number",
-  "Product": "string",
-  "Code": "string",
-  "version": "number",
-  "DemoDays": "number"
-}]</pre
-              >
-            </div>
-          </div>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/products</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/products/id/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/products/code/:code</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/products</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method put">PUT</span> /api/products/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method delete">DELETE</span> /api/products/:id</h3>
         </div>
       </section>
 
+      <!-- Licences Endpoints -->
+      <section class="endpoint-group">
+        <h2>Licences</h2>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/licences</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/licences/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/licences</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method put">PUT</span> /api/licences/:id</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method delete">DELETE</span> /api/licences/:id</h3>
+        </div>
+      </section>
+
+      <!-- Statistics Endpoints -->
       <section class="endpoint-group">
         <h2>Statistics</h2>
-        <div class="endpoint">
-          <h3>GET /api/statistics/overview</h3>
-          <div class="details">
-            <div class="response">
-              <h4>Response</h4>
-              <pre>
-{
-  "activeLicences": "number",
-  "totalLicences": "number",
-  "totalProducts": "number",
-  "totalClients": "number"
-}</pre
-              >
-            </div>
-          </div>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/statistics/overview</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/statistics/products-usage</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/statistics/monthly-licences</h3>
+        </div>
+      </section>
+
+      <!-- Trading Endpoints -->
+      <section class="endpoint-group">
+        <h2>Trading</h2>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/trading/active-licences</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/trading/client/:clientId</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/trading/register</h3>
+        </div>
+      </section>
+
+      <!-- Cache Endpoints -->
+      <section class="endpoint-group">
+        <h2>Cache</h2>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /api/cache</h3>
+        </div>
+
+        <div class="endpoint glass">
+          <h3><span class="method post">POST</span> /api/cache/clear</h3>
+        </div>
+      </section>
+
+      <!-- Legacy System -->
+      <section class="endpoint-group">
+        <h2>Legacy System</h2>
+        <div class="endpoint glass">
+          <h3><span class="method get">GET</span> /expireOff.aspx</h3>
         </div>
       </section>
     </main>
 
-    <footer>
+    <footer class="glass">
       <p>© 2024 Control Trading. All rights reserved.</p>
     </footer>
   </body>
