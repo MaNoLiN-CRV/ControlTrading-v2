@@ -175,45 +175,92 @@ nav {
     top: 0;
     left: 0;
     width: 100%;
-    background: var(--card-bg); /* Use card background for consistency */
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 11;
-    overflow-x: auto;
-    padding: 1rem 0;
+    padding: 0.75rem;
     border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 1%,
+        #000 99%,
+        transparent
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 1%,
+        #000 99%,
+        transparent
+    );
 }
 
 nav a {
     color: var(--text-primary);
     text-decoration: none;
-    padding: 0.75rem 1.25rem; /* Slightly larger padding */
+    padding: 0.75rem 1.25rem;
     border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
-    display: inline-block; /* Make them inline blocks */
-    font-weight: 500; /* Slightly bolder font weight */
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    border: 1px solid transparent;
 }
 
 nav a:hover {
-    background-color: var(--accent); /* Use accent color on hover */
-    color: var(--background); /* Invert text color on hover */
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    color: var(--text-primary);
 }
 
 nav a.active {
-    background-color: var(--accent); /* Style for the active link */
-    color: var(--background);
-}
-
-/* Hide scrollbar for better aesthetics, but still allow scrolling */
-nav::-webkit-scrollbar {
-    height: 6px;
-}
-
-nav::-webkit-scrollbar-thumb {
     background-color: var(--accent);
-    border-radius: 3px;
+    color: var(--background);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
-nav::-webkit-scrollbar-track {
-    background-color: var(--background);
+/* Hide scrollbar but keep functionality */
+.nav-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.nav-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 2px;
+}
+
+.nav-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Media query for better mobile display */
+@media (max-width: 768px) {
+    nav {
+        padding: 0.5rem;
+    }
+    
+    nav a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
 }
