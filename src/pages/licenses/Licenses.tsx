@@ -120,10 +120,11 @@ const Licenses = () => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <Navbar />
-      <main className="w-full p-4">
-        <h1 className="text-4xl font-bold text-center mb-6">Licencias</h1>
+      <main className="w-full px-6 sm:px-8 md:px-12 py-6 mx-auto max-w-7xl">
+        <h1 className="text-4xl font-bold text-center mb-8">Licencias</h1>
 
-        <div className="mb-4 px-4 max-w-5xl mx-auto flex flex-col sm:flex-row gap-4">
+        {/* Filter and search input */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="w-full sm:w-auto">
             <LicenseFilterCombobox 
               options={filterOptions}
@@ -137,11 +138,18 @@ const Licenses = () => {
               placeholder={getSearchPlaceholder()}
               defaultValue={search}
               onChange={handleSearchChange}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-2 bg-gray-800/70 text-white rounded-lg border border-gray-700 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 transition backdrop-blur-sm"
               disabled={!isAllLoaded}
             />
           </div>
         </div>
+
+        {/*
+          If data is still loading, show a loading spinner.
+          If there are no licenses, show a message.
+          If there are licenses, show the table.
+        */}
 
         {!isAllLoaded ? (
           <div className="flex flex-col items-center justify-center space-y-4 my-8">
@@ -154,8 +162,8 @@ const Licenses = () => {
           </div>
         ) : (
           <Suspense fallback={<div className="text-center my-4">Cargando tabla...</div>}>
-            <div className="overflow-x-auto px-4">
-              <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full bg-gray-800/70 backdrop-blur-md rounded-lg shadow-xl border border-gray-700/50">
                 <thead className="bg-gray-700">
                   <tr>
                     <th className="px-4 py-2 text-left">ID</th>
@@ -212,7 +220,7 @@ const Licenses = () => {
         )}
       </main>
 
-      {/* Diálogo de edición */}
+      {/* Edit License Dialog */}
       <EditLicenseDialog
         isOpen={isEditDialogOpen}
         onClose={closeEditDialog}
