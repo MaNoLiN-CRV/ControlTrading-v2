@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Trading API Documentation</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-  </head>
-
-  <body>
+</head>
+<body>
     <header class="glass">
-      <h1>Control Trading API</h1>
-      <p>REST API Documentation v1.0</p>
+        <h1>Control Trading API</h1>
+        <p>REST API Documentation v1.0</p>
     </header>
 
     <main>
-      <!-- Authentication Endpoints -->
-      <section class="endpoint-group">
-        <h2>Authentication</h2>
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/login</h3>
-          <div class="details">
-            <div class="request">
-              <h4>Request Body</h4>
-              <pre><code>{
+        <!-- Authentication Endpoints -->
+        <section class="endpoint-group">
+            <h2>Authentication</h2>
+            
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/login</h3>
+                <div class="details">
+                    <div class="request">
+                        <h4>Request Body</h4>
+                        <pre><code>{
   "username": "string",
   "password": "string"
 }</code></pre>
-            </div>
-            <div class="response">
-              <h4>Response</h4>
-              <pre><code>{
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
   "success": true,
   "token": "string",
   "user": {
@@ -39,166 +39,829 @@
     "role": "string"
   }
 }</code></pre>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/login/verify</h3>
-          <div class="details">
-            <div class="request">
-              <h4>Headers</h4>
-              <pre><code>{
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/login/verify</h3>
+                <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
   "Authorization": "Bearer {token}"
 }</code></pre>
-            </div>
-            <div class="response">
-              <h4>Response</h4>
-              <pre><code>{
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
   "isValid": true
 }</code></pre>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- Clients Endpoints -->
-      <section class="endpoint-group">
-        <h2>Clients</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/clients</h3>
-          <div class="details">
-            <h4>Headers</h4>
-            <pre><code>{
+        <!-- Clients Endpoints -->
+        <section class="endpoint-group">
+            <h2>Clients</h2>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/clients</h3>
+                <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
   "Authorization": "Bearer {token}"
 }</code></pre>
-          </div>
-        </div>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idClient": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/clients/:id</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/clients/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idClient": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/clients</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/clients</h3>
+                <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idClient": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method put">PUT</span> /api/clients/:id</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method put">PUT</span> /api/clients/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Client updated successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method delete">DELETE</span> /api/clients/:id</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method delete">DELETE</span> /api/clients/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Client deleted successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <!-- Products Endpoints -->
-      <section class="endpoint-group">
-        <h2>Products</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/products</h3>
-        </div>
+        <!-- Products Endpoints -->
+        <section class="endpoint-group">
+            <h2>Products</h2>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/products/id/:id</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/products</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idProduct": "number",
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/products/code/:code</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/products/id/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idProduct": "number",
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/products</h3>
-        </div>
+             <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/products/code/:code</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idProduct": "number",
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method put">PUT</span> /api/products/:id</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/products</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idProduct": "number",
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method delete">DELETE</span> /api/products/:id</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method put">PUT</span> /api/products/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "idShop": "number",
+  "DemoDays": "number",
+  "link": "string",
+  "comentario": "string"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Product updated successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Licences Endpoints -->
-      <section class="endpoint-group">
-        <h2>Licences</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/licences</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method delete">DELETE</span> /api/products/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Product deleted successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/licences/:id</h3>
-        </div>
+        <!-- Licences Endpoints -->
+        <section class="endpoint-group">
+            <h2>Licences</h2>
 
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/licences</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idLicence": "number",
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method put">PUT</span> /api/licences/:id</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idLicence": "number",
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method delete">DELETE</span> /api/licences/:id</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/licences</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idLicence": "number",
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Statistics Endpoints -->
-      <section class="endpoint-group">
-        <h2>Statistics</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/statistics/overview</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method put">PUT</span> /api/licences/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Licence updated successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/statistics/products-usage</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method delete">DELETE</span> /api/licences/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Licence deleted successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/statistics/monthly-licences</h3>
-        </div>
-      </section>
+        <!-- Statistics Endpoints -->
+        <section class="endpoint-group">
+            <h2>Statistics</h2>
 
-      <!-- Trading Endpoints -->
-      <section class="endpoint-group">
-        <h2>Trading</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/trading/active-licences</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/statistics/overview</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "activeLicences": "number",
+  "totalLicences": "number",
+  "totalProducts": "number",
+  "totalClients": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/trading/client/:clientId</h3>
-        </div>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/statistics/products-usage</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "Product": "string",
+  "Code": "string",
+  "totalLicences": "number",
+  "activeLicences": "number"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
 
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/trading/register</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/statistics/monthly-licences</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "month": "string",
+  "totalLicences": "number"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <!-- Cache Endpoints -->
-      <section class="endpoint-group">
-        <h2>Cache</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /api/cache</h3>
-        </div>
+        <!-- Trading Endpoints -->
+        <section class="endpoint-group">
+            <h2>Trading</h2>
 
-        <div class="endpoint glass">
-          <h3><span class="method post">POST</span> /api/cache/clear</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/trading/active-licences</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idLicence": "number",
+  "idClient": "number",
+  "idProduct": "number",
+  "expiration": "date",
+  "idShop": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Product": "string",
+  "Code": "string"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Legacy System -->
-      <section class="endpoint-group">
-        <h2>Legacy System</h2>
-        <div class="endpoint glass">
-          <h3><span class="method get">GET</span> /expireOff.aspx</h3>
-        </div>
-      </section>
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/trading/client/:clientId</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idClient": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Broker": "string",
+  "Tests": "string",
+  "licences": "[...]"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/trading/register</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "client": {
+    "MT4ID": "string",
+    "Nombre": "string",
+    "Broker": "string",
+    "Tests": "string",
+    "idShop": "number"
+  },
+  "productId": "number",
+  "expirationDays": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "client": {
+    "idClient": "number",
+    "MT4ID": "string",
+    "Nombre": "string",
+    "Broker": "string",
+    "Tests": "string"
+  },
+  "licence": {
+    "idLicence": "number",
+    "idClient": "number",
+    "idProduct": "number",
+    "expiration": "date",
+    "idShop": "number"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cache Endpoints -->
+        <section class="endpoint-group">
+            <h2>Cache</h2>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/cache</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "keys": "[...]",
+  "totalItems": "number",
+  "memory": "{...}"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/cache/clear</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Cache cleared successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Licence2 Endpoints -->
+        <section class="endpoint-group">
+            <h2>Licence2</h2>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences2</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences2/id/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences2/mt4id/:mt4id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>[{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}]</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /api/licences2/mt4id/:mt4id/product/:productId</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method post">POST</span> /api/licences2</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method put">PUT</span> /api/licences2/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                         <h4>Request Body</h4>
+                        <pre><code>{
+  "MT4ID": "string",
+  "idProduct": "number",
+  "idShop": "number"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Licence updated successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint glass">
+                <h3><span class="method delete">DELETE</span> /api/licences2/:id</h3>
+                 <div class="details">
+                    <div class="request">
+                        <h4>Headers</h4>
+                        <pre><code>{
+  "Authorization": "Bearer {token}"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response</h4>
+                        <pre><code>{
+  "message": "Licence deleted successfully"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legacy System -->
+        <section class="endpoint-group">
+            <h2>Legacy System</h2>
+
+            <div class="endpoint glass">
+                <h3><span class="method get">GET</span> /expireOff.aspx</h3>
+                <div class="details">
+                    <div class="request">
+                        <h4>Query Parameters</h4>
+                        <pre><code>{
+  "mt4": "string",
+  "name": "string",
+  "product": "string",
+  "broker": "string",
+  "check": "string"
+}</code></pre>
+                    </div>
+                    <div class="response">
+                        <h4>Response (Text)</h4>
+                        <pre><code>YYYY.MM.DD
+hash_</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="glass">
-      <p>© 2024 Control Trading. All rights reserved.</p>
+        <p>© 2024 Control Trading. All rights reserved.</p>
     </footer>
-  </body>
+</body>
 </html>
