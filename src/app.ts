@@ -15,9 +15,6 @@ import cors from 'cors';
 
 const app = express();
 
-// Serve static files
-app.use(express.static('public'));
-
 // Rate limiting configuration
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 15 minutes
@@ -47,7 +44,7 @@ const expireOffLimiter = rateLimit({
 
 // Security Middlewares
 app.use(helmet({
-  contentSecurityPolicy: true, 
+  contentSecurityPolicy: false, 
   crossOriginEmbedderPolicy: false,
   crossOriginOpenerPolicy: false,
   crossOriginResourcePolicy: false,
@@ -72,6 +69,14 @@ app.use('/api/licences2', authentication, licence2Routes);
 
 // special rate limit to expireOff endpoint
 app.use('/expireOff.aspx', expireOffLimiter);
-app.use('', expirationRoutes); // Old compatibility route
+app.use(expirationRoutes);
+
+// Serve static files 
+app.use('/', express.static('public'));
+
+// Add a specific route for the root path
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: './public' });
+});
 
 export default app;
