@@ -1,0 +1,168 @@
+.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Trading API Documentation</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Control Trading API</h1>
+      <p>API Documentation v1.0</p>
+    </header>
+
+    <main>
+      <section class="endpoint-group">
+        <h2>Authentication</h2>
+        <div class="endpoint">
+          <h3>POST /api/login</h3>
+          <div class="details">
+            <div class="request">
+              <h4>Request</h4>
+              <pre>
+{
+  "username": "string",
+  "password": "string"
+}</pre
+              >
+            </div>
+            <div class="response">
+              <h4>Response</h4>
+              <pre>
+{
+  "success": true,
+  "token": "string",
+  "user": {
+    "id": "number",
+    "username": "string",
+    "role": "string"
+  }
+}</pre
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="endpoint-group">
+        <h2>Legacy Endpoints</h2>
+        <div class="endpoint">
+          <h3>GET /expireOff.aspx</h3>
+          <div class="details">
+            <div class="request">
+              <h4>Query Parameters</h4>
+              <pre>
+{
+  "mt4": "string",
+  "name": "string",
+  "product": "string",
+  "broker": "string",
+  "check": "string"
+}</pre
+              >
+            </div>
+            <div class="response">
+              <h4>Response (Text)</h4>
+              <pre>
+YYYY.MM.DD
+hash_</pre
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="endpoint-group">
+        <h2>Trading</h2>
+        <div class="endpoint">
+          <h3>GET /api/trading/active-licences</h3>
+          <div class="details">
+            <div class="response">
+              <h4>Response</h4>
+              <pre>
+[{
+  "idLicence": "number",
+  "MT4ID": "string",
+  "Nombre": "string",
+  "Product": "string",
+  "expiration": "date"
+}]</pre
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <h3>GET /api/trading/client/:clientId</h3>
+          <div class="details">
+            <div class="response">
+              <h4>Response</h4>
+              <pre>
+{
+  "client": {
+    "idClient": "number",
+    "MT4ID": "string",
+    "Nombre": "string"
+  },
+  "licences": [{
+    "idLicence": "number",
+    "product": "object",
+    "expiration": "date"
+  }]
+}</pre
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="endpoint-group">
+        <h2>Products</h2>
+        <div class="endpoint">
+          <h3>GET /api/products</h3>
+          <div class="details">
+            <div class="response">
+              <h4>Response</h4>
+              <pre>
+[{
+  "idProduct": "number",
+  "Product": "string",
+  "Code": "string",
+  "version": "number",
+  "DemoDays": "number"
+}]</pre
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="endpoint-group">
+        <h2>Statistics</h2>
+        <div class="endpoint">
+          <h3>GET /api/statistics/overview</h3>
+          <div class="details">
+            <div class="response">
+              <h4>Response</h4>
+              <pre>
+{
+  "activeLicences": "number",
+  "totalLicences": "number",
+  "totalProducts": "number",
+  "totalClients": "number"
+}</pre
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2024 Control Trading. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

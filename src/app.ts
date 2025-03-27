@@ -15,6 +15,9 @@ import cors from 'cors';
 
 const app = express();
 
+// Serve static files
+app.use(express.static('public'));
+
 // Rate limiting configuration
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 15 minutes
