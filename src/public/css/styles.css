@@ -168,3 +168,52 @@ footer {
   background: var(--accent);
   border-radius: 4px;
 }
+
+/* CSS for scrollable navigation */
+nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--card-bg); /* Use card background for consistency */
+    z-index: 11;
+    overflow-x: auto;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.75rem 1.25rem; /* Slightly larger padding */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    display: inline-block; /* Make them inline blocks */
+    font-weight: 500; /* Slightly bolder font weight */
+}
+
+nav a:hover {
+    background-color: var(--accent); /* Use accent color on hover */
+    color: var(--background); /* Invert text color on hover */
+}
+
+nav a.active {
+    background-color: var(--accent); /* Style for the active link */
+    color: var(--background);
+}
+
+/* Hide scrollbar for better aesthetics, but still allow scrolling */
+nav::-webkit-scrollbar {
+    height: 6px;
+}
+
+nav::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 3px;
+}
+
+nav::-webkit-scrollbar-track {
+    background-color: var(--background);
+}
