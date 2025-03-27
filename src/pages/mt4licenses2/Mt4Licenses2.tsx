@@ -20,6 +20,14 @@ const Mt4Licenses2 = () => {
     addLicense,
     deleteLicense 
   } = useMt4Licenses2Data();
+
+  const filterLicenses = (license: any, searchText: string) => {
+    const searchLower = searchText.toLowerCase();
+    return (
+      license.MT4ID.toLowerCase().includes(searchLower) ||
+      license.idLicence.toString().includes(searchLower)
+    );
+  };
   
   const {
     search,
@@ -28,7 +36,8 @@ const Mt4Licenses2 = () => {
     paginatedItems: paginatedLicenses,
     handleSearchChange,
     setCurrentPage,
-  } = useSearchAndPagination(licenses, 10);
+    filteredItemsCount
+  } = useSearchAndPagination(licenses, 10, undefined, filterLicenses);
 
   const [licenseCount, setLicenseCount] = useState(1);
 
@@ -116,19 +125,32 @@ const Mt4Licenses2 = () => {
             <AddLicenseControl />
           </div>
 
+          {/* Search input with stats */}
           <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Buscar licencias..."
-              value={search}
-              onChange={handleSearchChange}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar por MT4 ID o número de licencia..."
+                onChange={handleSearchChange}
+                className="w-full px-4 py-2 bg-gray-800/70 text-white rounded-lg border border-gray-700 
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 transition backdrop-blur-sm
+                  placeholder:text-gray-400"
+              />
+            </div>
+            {search && (
+              <div className="mt-2 text-sm text-gray-400">
+                Encontradas: {filteredItemsCount} licencias
+              </div>
+            )}
           </div>
 
           {isLoading ? (
             <div className="flex justify-center my-8">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            </div>
+          ) : paginatedLicenses.length === 0 ? (
+            <div className="text-center text-gray-400 my-8">
+              No se encontraron licencias que coincidan con la búsqueda
             </div>
           ) : (
             <>
