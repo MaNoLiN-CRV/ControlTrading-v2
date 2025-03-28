@@ -1,9 +1,7 @@
 import { useParams, Navigate } from 'react-router-dom';
-import { useAuthContext } from '@/pages/login/context/AuthContext';
 import ProtectedRoute from '@/components/wrappers/ProtectedRoute';
 import Mt4Licenses2 from '../mt4licenses2/Mt4Licenses2';
 
-// Definición de versiones y sus IDs de producto correspondientes
 export const tradingStationVersions = {
   '2.6': { version: '2.6', idProduct: 125 },
   '2.7': { version: '2.7', idProduct: 170 },
