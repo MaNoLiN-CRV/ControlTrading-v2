@@ -1,6 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, BookPlus, ShoppingBag, LayoutDashboard } from "lucide-react";
+import { Home, BookPlus, ShoppingBag, LayoutDashboard, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const location = useLocation();
@@ -16,10 +22,15 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const tradingStationVersions = [
+    { version: "2.6", idProduct: 125, path: "/trading-station/2.6" },
+    { version: "2.7", idProduct: 170, path: "/trading-station/2.7" },
+    { version: "2.8", idProduct: 177, path: "/trading-station/2.8" },
+  ];
+
   const navLinks = [
     { to: "/", label: "Home", icon: Home },
     { to: "/licenses", label: "Licencias Enbolsa", icon: BookPlus },
-    { to: "/trading-station", label: "Trading Station", icon: LayoutDashboard },
     { to: "/products", label: "Productos Enbolsa", icon: ShoppingBag },
   ];
 
@@ -77,6 +88,41 @@ const Navbar = () => {
                 </li>
               );
             })}
+
+            {/* Trading Station Dropdown */}
+            <li>
+              <DropdownMenu>
+                <DropdownMenuTrigger className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 ${
+                  location.pathname.includes('/trading-station')
+                    ? 'bg-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
+                    : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                } group relative overflow-hidden`}>
+                  {/* Hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                  
+                  {/* Content */}
+                  <div className="flex items-center space-x-2 relative z-10">
+                    <LayoutDashboard className={`w-4 h-4 transition-transform duration-200 ${
+                      location.pathname.includes('/trading-station') ? 'scale-110' : 'group-hover:scale-110'
+                    }`} />
+                    <span className="font-medium">Trading Station</span>
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-gray-800 border border-gray-700">
+                  {tradingStationVersions.map((version) => (
+                    <DropdownMenuItem key={version.idProduct}>
+                      <Link
+                        to={version.path}
+                        className="flex items-center px-2 py-1 w-full text-gray-300 hover:text-white"
+                      >
+                        Trading Station {version.version}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
           </ul>
         </div>
       </nav>

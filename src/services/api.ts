@@ -2,7 +2,7 @@ import ApiFactory from "@/fetcher/ApiFactory";
 import Http from "@/fetcher/http";
 
 // API base URL
-const API_BASE_URL = "http://192.168.1.23:3000/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 const defaultHeaders = {
   'Content-Type': 'application/json',

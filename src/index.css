@@ -20,9 +20,7 @@
   }
 }
 
-main {
-  padding-top: 4rem; 
-}
+
 
 .backdrop-blur-navbar {
   -webkit-backdrop-filter: blur(8px);

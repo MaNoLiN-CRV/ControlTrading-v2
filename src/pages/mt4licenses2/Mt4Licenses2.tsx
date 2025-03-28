@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { useAuthContext } from "../login/context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { Plus, Minus, Trash2, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { useMt4Licenses2Data } from "./hooks/useMt4Licenses2Data";
 import useSearchAndPagination from "@/hooks/useSearchAndPagination";
 import { Button } from "@/components/ui/button";
+import type { TradingStationVersion } from "@/pages/trading-station/TradingStationContainer";
 
-const Mt4Licenses2 = () => {
-  const { isAuthenticated } = useAuthContext();
-  const navigate = useNavigate();
+interface Mt4Licenses2Props {
+  idProduct?: number;
+  version?: TradingStationVersion;
+}
+
+const Mt4Licenses2 = ({ idProduct, version }: Mt4Licenses2Props) => {
   
   const { 
     licenses, 
@@ -18,9 +20,16 @@ const Mt4Licenses2 = () => {
     fetchLicenses, 
     updateLicense, 
     addLicense,
-    deleteLicense 
-  } = useMt4Licenses2Data();
+    deleteLicense,
+    defaultIdProduct
+  } = useMt4Licenses2Data({ defaultIdProduct: idProduct, version });
 
+  // Usar el idProduct proporcionado o el predeterminado del hook
+  const productId = idProduct || defaultIdProduct;
+  
+  // Filtrar licencias por idProduct
+  const filteredByProduct = licenses.filter(license => license.idProduct === productId);
+  
   const filterLicenses = (license: any, searchText: string) => {
     const searchLower = searchText.toLowerCase();
     return (
@@ -37,7 +46,7 @@ const Mt4Licenses2 = () => {
     handleSearchChange,
     setCurrentPage,
     filteredItemsCount
-  } = useSearchAndPagination(licenses, 10, undefined, filterLicenses);
+  } = useSearchAndPagination(filteredByProduct, 10, undefined, filterLicenses);
 
   const [licenseCount, setLicenseCount] = useState(1);
 
@@ -52,7 +61,15 @@ const Mt4Licenses2 = () => {
 
   const handleAddLicenses = async () => {
     try {
-      const promises = Array(licenseCount).fill(null).map(() => addLicense());
+      const promises = Array(licenseCount)
+        .fill(null)
+        .map(() => 
+          addLicense({
+            MT4ID: "000000",
+            idProduct: productId,
+            idShop: 1
+          })
+        );
       await Promise.all(promises);
     } catch (error) {
       console.error("Error adding licenses:", error);
@@ -60,57 +77,42 @@ const Mt4Licenses2 = () => {
   };
 
   const handleDeleteLicense = async (id: number) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar esta licencia?")) {
-      try {
-        await deleteLicense(id);
-      } catch (error) {
-        console.error("Error deleting license:", error);
-      }
+    try {
+      await deleteLicense(id);
+    } catch (error) {
+      console.error("Error deleting license:", error);
     }
   };
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/login");
-    } else {
-      fetchLicenses();
-    }
-  }, [isAuthenticated, navigate, fetchLicenses]);
+    fetchLicenses();
+  }, [fetchLicenses]);
 
+  // Componente para el contador de licencias a agregar
   const AddLicenseControl = () => (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="outline"
-        onClick={() => setLicenseCount(prev => Math.max(1, prev - 1))}
-        className="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 p-0 rounded-full"
-      >
-        <Minus className="h-4 w-4" />
-      </Button>
-      
-      <div className="flex items-center gap-2">
-        <input
-          type="number"
-          value={licenseCount}
-          onChange={(e) => setLicenseCount(Math.max(1, parseInt(e.target.value) || 1))}
-          className="w-16 px-2 py-1 text-center bg-gray-800 text-white rounded-md border border-gray-600 
-            focus:outline-none focus:ring-2 focus:ring-blue-500/70"
-        />
+    <div className="flex items-center space-x-4">
+      <div className="flex items-center bg-gray-800/70 backdrop-blur-sm rounded-lg border border-gray-700/50">
+        <button
+          onClick={() => setLicenseCount(Math.max(1, licenseCount - 1))}
+          className="p-2 text-gray-400 hover:text-white"
+          aria-label="Decrease count"
+        >
+          <Minus size={16} />
+        </button>
+        <span className="w-12 text-center">{licenseCount}</span>
+        <button
+          onClick={() => setLicenseCount(licenseCount + 1)}
+          className="p-2 text-gray-400 hover:text-white"
+          aria-label="Increase count"
+        >
+          <Plus size={16} />
+        </button>
       </div>
-
-      <Button
-        variant="outline"
-        onClick={() => setLicenseCount(prev => prev + 1)}
-        className="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 p-0 rounded-full"
-      >
-        <Plus className="h-4 w-4" />
-      </Button>
-
       <Button
         onClick={handleAddLicenses}
-        className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 ml-2"
+        className="bg-blue-600/80 hover:bg-blue-700/90 text-white backdrop-blur-sm"
       >
-        <Plus className="h-5 w-5" />
-        Añadir {licenseCount > 1 ? `${licenseCount} Licencias` : 'Licencia'}
+        Agregar Licencias
       </Button>
     </div>
   );
@@ -118,10 +120,12 @@ const Mt4Licenses2 = () => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <Navbar />
-      <main className="w-full p-4">
+      <main className="w-full px-6 sm:px-8 md:px-12 py-6 mx-auto max-w-7xl pt-20">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-4xl font-bold">Licencias MT4 v2</h1>
+            <h1 className="text-4xl font-bold">
+              Trading Station {version}
+            </h1>
             <AddLicenseControl />
           </div>
 

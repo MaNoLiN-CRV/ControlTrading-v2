@@ -77,14 +77,15 @@ export function EditLicenseDialog({
       setErrorMessage("");
       
       if (selectedDate) {
-        editableLicense.expiration = selectedDate;
+        const adjustedDate = new Date(selectedDate);
+        adjustedDate.setHours(12, 0, 0, 0);
+        editableLicense.expiration = adjustedDate;
       }
 
       const updatedClient = { ...client, Nombre: clientName };
       const updatedProduct = { ...product, Product: productName };
       
       await ApiService.updateLicence(editableLicense);
-      
       await ApiService.updateClient(updatedClient);
       await ApiService.updateProduct(updatedProduct);
       

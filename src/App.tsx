@@ -6,8 +6,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Licenses from "./pages/licenses/Licenses";
 import Products from "./pages/products/Products";
 import { useAuthContext } from "./pages/login/context/AuthContext";
-import Mt4Licenses2 from "./pages/mt4licenses2/Mt4Licenses2";
 import Layout from './components/Layout';
+import TradingStationContainer from './pages/trading-station/TradingStationContainer';
 
 function AppRoutes() {
   const { isTokenValid, loading } = useAuthContext();
@@ -60,12 +60,13 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route path="trading-station"
-        element={
-          <ProtectedRoute>
-            <Mt4Licenses2 />
-          </ProtectedRoute>
-        }
+        <Route 
+          path="/trading-station" 
+          element={<Navigate to="/trading-station/2.8" replace />} 
+        />
+        <Route 
+          path="/trading-station/:version" 
+          element={<TradingStationContainer />} 
         />
       </Routes>
     </Layout>
