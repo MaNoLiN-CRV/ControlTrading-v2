@@ -5,7 +5,8 @@
   "private": true,
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/express": "^5.0.0",
+    "@types/compression": "^1.7.5",
+    "@types/express": "^5.0.1",
     "@types/express-rate-limit": "^6.0.2",
     "@types/node": "^22.13.10"
   },
@@ -15,9 +16,10 @@
   "dependencies": {
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.9",
+    "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",

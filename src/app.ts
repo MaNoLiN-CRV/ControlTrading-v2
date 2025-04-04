@@ -12,8 +12,40 @@ import licence2Routes from './routes/mt4licence2.routes';
 import expirationRoutes from './routes/expiration.routes';
 import helmet from 'helmet';
 import cors from 'cors';
+import compression from 'compression';
 
 const app = express();
+
+// Compression Middleware
+app.use(compression({
+  level: 6, 
+  threshold: 1024, // Compress responses larger than 1KB
+  memLevel: 8, // Memory usage level (1-9)
+  chunkSize: 16 * 1024, // Buffer size (16KB)
+  strategy: 0, // Compression strategy (0 = speed, 1 = best compression)
+  filter: (req, res) => {
+    // Do not compress if the client does not support it
+    if (req.headers['accept-encoding']?.indexOf('gzip') === -1) {
+      return false;
+    }
+    
+    // Do not compress if explicitly requested
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    
+    // Do not compress small content, images, videos, or already compressed files
+    const contentType = res.getHeader('Content-Type');
+    if (
+      typeof contentType === 'string' &&
+      contentType.match(/image|video|audio|pdf|zip|rar|gzip|bzip2|7z/)
+    ) {
+      return false;
+    }
+    
+    return compression.filter(req, res);
+  },
+}));  
 
 // Security Middlewares
 app.use(helmet({
