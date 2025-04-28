@@ -38,6 +38,8 @@ const Mt4Licenses2 = ({ idProduct, version }: Mt4Licenses2Props) => {
     );
   };
   
+  const paginationKey = `trading-station-${version || defaultIdProduct}`;
+  
   const {
     search,
     currentPage,
@@ -46,7 +48,7 @@ const Mt4Licenses2 = ({ idProduct, version }: Mt4Licenses2Props) => {
     handleSearchChange,
     setCurrentPage,
     filteredItemsCount
-  } = useSearchAndPagination(filteredByProduct, 10, undefined, filterLicenses);
+  } = useSearchAndPagination(filteredByProduct, 10, undefined, filterLicenses, paginationKey);
 
   const [licenseCount, setLicenseCount] = useState(1);
 
