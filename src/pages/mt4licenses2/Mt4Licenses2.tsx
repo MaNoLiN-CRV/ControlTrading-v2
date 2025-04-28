@@ -206,7 +206,7 @@ const Mt4Licenses2 = ({ idProduct, version }: Mt4Licenses2Props) => {
               </div>
 
               {/* Paginación */}
-              <div className="flex justify-between items-center mt-4">
+              <div className="flex justify-between items-center mt-4 w-full bg-gray-900/80 py-4 px-6 border-t border-gray-700 sticky bottom-0">
                 <Button
                   variant="outline"
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

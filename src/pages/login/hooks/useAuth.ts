@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import useSafeDispatch from "@/hooks/useSafeDispatch";
 import api from "@/services/api";
 

@@ -197,21 +197,21 @@ const Licenses = () => {
                 </tbody>
               </table>
             </div>
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 w-full bg-gray-900/80 py-4 px-6 border-t border-gray-700 sticky bottom-0">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
+                className="px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 hover:bg-gray-700 disabled:opacity-50"
               >
                 Anterior
               </button>
-              <span className="text-white">
+              <span className="text-gray-300">
                 Página {currentPage} de {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
+                className="px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 hover:bg-gray-700 disabled:opacity-50"
               >
                 Siguiente
               </button>
