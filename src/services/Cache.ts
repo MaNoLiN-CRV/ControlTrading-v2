@@ -21,7 +21,7 @@ class Cache<T> {
     }
     // Check if the data is expired
     if (Date.now() > cached.expiry) {
-      this.cache.delete(key);
+      this.delete(key); // Use the delete method instead of directly calling this.cache.delete
       return null;
     }
     return cached.data;
